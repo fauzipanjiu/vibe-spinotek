@@ -1,0 +1,28 @@
+# 🌊 THE STREAM - Spinotek Creative Lab
+
+Platform koleksi karya kreatif (Vibecoding) dari tim Spinotek dan komunitas mahasiswa.  
+Live at: [vibe.spinotek.com](https://vibe.spinotek.com)
+
+## 🚀 Cara "Drop Your Work"
+
+Sederhanakan URL karya Anda (menjadi `vibe.spinotek.com/nama-karya`) dengan mengikuti langkah ini:
+
+1. **Fork** repositori ini.
+2. Buat folder baru **langsung di root** (folder utama) repositori.
+   - Gunakan nama folder yang singkat (contoh: `karya-keren`).
+   - Hindari spasi, gunakan tanda hubung `-` (contoh: `web-proto`).
+3. Isi folder tersebut dengan:
+   - `index.html` (Wajib ada sebagai file utama).
+   - File pendukung lainnya (CSS, JS, Images).
+4. Pastikan semua path aset bersifat **Relatif** (contoh: `./style.css`, bukan `/style.css`).
+5. Lakukan **Pull Request** ke branch `main`.
+
+## 📂 Contoh Struktur
+```text
+/ (root)
+├── index.html (Halaman THE STREAM)
+├── agramas/
+│   └── index.html
+└── karya-mahasiswa/
+    ├── index.html
+    └── style.css
