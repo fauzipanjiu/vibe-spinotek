@@ -3,128 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Darmarasha Coffee | Order Online</title>
+    <title>Darmarasha Coffee | More Than Just Coffee</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #FFFFFF; color: #1A1A1A; }
+        [x-cloak] { display: none !important; }
+        body { font-family: 'Inter', sans-serif; background-color: #FAFAFA; color: #1F1412; }
         .font-serif { font-family: 'Playfair Display', serif; }
         .bg-espresso { background-color: #1F1412; }
         .text-espresso { color: #1F1412; }
         .bg-gold { background-color: #C5A358; }
-        .border-gold { border-color: #C5A358; }
         
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #1F1412; border-radius: 10px; }
+        @keyframes cart-bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2) rotate(-8deg); }
+        }
+        .animate-cart { animation: cart-bounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+        .fly-item {
+            position: fixed; z-index: 9999; pointer-events: none;
+            transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+            border-radius: 50%; object-fit: cover;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body x-data="orderSystem()">
 
-    <nav class="flex justify-between items-center px-6 md:px-12 py-5 sticky top-0 bg-white/90 backdrop-blur-xl z-50 border-b border-gray-100">
-        <div class="text-2xl font-black tracking-tighter text-espresso">DARMARASHA.</div>
+    <nav class="flex justify-between items-center px-6 md:px-12 py-5 sticky top-0 bg-white/80 backdrop-blur-xl z-[60] border-b border-gray-100">
+        <div class="text-2xl font-black tracking-tighter text-espresso uppercase">DARMARASHA.</div>
         
-        <div class="hidden md:flex space-x-8 font-bold text-[11px] uppercase tracking-[0.2em] text-gray-500">
-            <a href="#home" class="hover:text-espresso transition">Home</a>
+        <div class="hidden lg:flex space-x-8 text-[11px] font-bold uppercase tracking-widest text-gray-400">
             <a href="#menu" class="hover:text-espresso transition">Menu</a>
-            <a href="#contact" class="hover:text-espresso transition">Location</a>
+            <a href="#promo" class="hover:text-espresso transition text-red-500">Promo</a>
+            <a href="#spaces" class="hover:text-espresso transition">Work Space</a>
+            <a href="#gallery" class="hover:text-espresso transition">Gallery</a>
         </div>
 
-        <button @click="cartOpen = true" class="relative bg-espresso text-white p-3 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition">
+        <button id="cart-btn" @click="cartOpen = true" 
+                class="relative bg-espresso text-white p-3 px-5 rounded-full flex items-center gap-3 shadow-xl transition transform active:scale-95"
+                :class="cartChanged ? 'animate-cart' : ''">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
             </svg>
-            <span x-show="cart.length > 0" x-text="cart.length" class="absolute -top-1 -right-1 bg-gold text-white text-[10px] font-bold h-5 w-5 rounded-full border-2 border-white flex items-center justify-center"></span>
+            <span class="text-xs font-bold" x-text="totalItems() > 0 ? 'Rp ' + (totalPrice()/1000).toFixed(3) : 'Cart'"></span>
         </button>
     </nav>
 
-    <section id="home" class="pt-20 pb-12 px-6 text-center">
-        <h1 class="text-4xl md:text-6xl font-serif italic text-espresso mb-4">Skip the Line.</h1>
-        <p class="text-gray-500 max-w-lg mx-auto font-medium">Pesan dari meja Anda atau ambil langsung di bar. Kopi artisan kini dalam genggaman.</p>
+    <header class="relative h-[80vh] flex items-center justify-center overflow-hidden bg-espresso">
+        <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=1600" class="absolute inset-0 w-full h-full object-cover opacity-40">
+        <div class="relative z-10 text-center px-6">
+            <span class="text-gold font-bold tracking-[0.4em] text-xs uppercase mb-4 block">Est. 2024 • Premium Roastery</span>
+            <h1 class="text-5xl md:text-8xl font-serif italic text-white mb-6">Coffee, Work,<br>& Culture.</h1>
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                <a href="#menu" class="bg-white text-espresso px-10 py-4 rounded-full font-bold uppercase text-xs tracking-widest hover:bg-gold hover:text-white transition">Order Now</a>
+                <a href="#spaces" class="bg-transparent border border-white/30 text-white px-10 py-4 rounded-full font-bold uppercase text-xs tracking-widest hover:bg-white/10 transition">Book a Space</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="promo" class="py-20 bg-white overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex justify-between items-end mb-10">
+                <div>
+                    <h2 class="text-3xl font-serif italic mb-2">Happening Now</h2>
+                    <p class="text-gray-400 text-sm">Jangan lewatkan penawaran terbatas bulan ini.</p>
+                </div>
+            </div>
+            <div class="flex space-x-6 overflow-x-auto no-scrollbar pb-10">
+                <div class="min-w-[300px] md:min-w-[450px] bg-red-50 rounded-[2.5rem] p-8 flex flex-col justify-between">
+                    <div>
+                        <span class="bg-red-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">Promo</span>
+                        <h3 class="text-2xl font-bold mt-4 mb-2">Buy 1 Get 1 Free</h3>
+                        <p class="text-sm text-gray-500">Setiap pembelian Signature Palm Latte di hari Jumat. Mulai pukul 14.00 - 17.00.</p>
+                    </div>
+                    <button class="mt-6 text-red-500 font-bold text-xs uppercase tracking-widest underline">Claim Promo</button>
+                </div>
+                <div class="min-w-[300px] md:min-w-[450px] bg-indigo-50 rounded-[2.5rem] p-8 flex flex-col justify-between">
+                    <div>
+                        <span class="bg-indigo-500 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase">Event</span>
+                        <h3 class="text-2xl font-bold mt-4 mb-2">Accoustic Night</h3>
+                        <p class="text-sm text-gray-500">Live music setiap Sabtu malam. Nikmati suasana syahdu bersama teman-teman.</p>
+                    </div>
+                    <button class="mt-6 text-indigo-500 font-bold text-xs uppercase tracking-widest underline">See Schedule</button>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section id="menu" class="max-w-7xl mx-auto px-6 pb-24">
-        <div class="flex space-x-4 overflow-x-auto pb-8 no-scrollbar">
-            <template x-for="cat in categories">
-                <button @click="activeCat = cat" 
-                    :class="activeCat === cat ? 'bg-espresso text-white' : 'bg-gray-100 text-gray-600'" 
-                    class="px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest whitespace-nowrap transition"
-                    x-text="cat">
-                </button>
-            </template>
+    <section id="menu" class="py-20 max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-serif italic mb-4">Artisan Menu</h2>
+            <div class="h-1 w-20 bg-gold mx-auto"></div>
         </div>
-
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
-            <template x-for="item in filteredMenu()">
-                <div class="group bg-white rounded-3xl p-4 border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300">
-                    <div class="relative overflow-hidden rounded-2xl aspect-square mb-4 bg-gray-50">
-                        <img :src="item.image" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <template x-for="item in menu" :key="item.id">
+                <div class="group bg-white rounded-[2.5rem] p-5 border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-500">
+                    <div class="relative overflow-hidden rounded-[2rem] aspect-square mb-5 bg-gray-50">
+                        <img :id="'img-' + item.id" :src="item.image" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
                     </div>
-                    <h3 class="font-bold text-espresso text-lg leading-tight mb-1" x-text="item.name"></h3>
-                    <p class="text-[11px] text-gray-400 mb-4 line-clamp-2" x-text="item.desc"></p>
+                    <h3 class="font-bold text-espresso text-lg mb-1" x-text="item.name"></h3>
+                    <p class="text-[11px] text-gray-400 mb-6 h-8 overflow-hidden" x-text="item.desc"></p>
                     <div class="flex items-center justify-between">
                         <span class="font-black text-espresso" x-text="'Rp ' + (item.price/1000).toFixed(3)"></span>
-                        <button @click="addToCart(item)" class="bg-gray-100 hover:bg-espresso hover:text-white p-2 rounded-xl transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                            </svg>
-                        </button>
+                        <div class="flex items-center bg-gray-50 rounded-2xl p-1 border border-gray-100">
+                            <button x-show="getItemQty(item.id) > 0" x-transition @click="updateQty(item, -1)" class="w-8 h-8 flex items-center justify-center bg-white rounded-xl shadow-sm">-</button>
+                            <span x-show="getItemQty(item.id) > 0" class="px-3 font-bold text-sm" x-text="getItemQty(item.id)"></span>
+                            <button @click="updateQty(item, 1, $event)" class="w-8 h-8 flex items-center justify-center bg-espresso text-white rounded-xl shadow-lg active:scale-90 transition">+</button>
+                        </div>
                     </div>
                 </div>
             </template>
         </div>
     </section>
 
-    <div x-show="cartOpen" class="fixed inset-0 z-[100] overflow-hidden" x-cloak>
-        <div class="absolute inset-0 bg-black/40 backdrop-blur-sm" @click="cartOpen = false"></div>
-        <div class="absolute inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="translate-x-full">
-            
-            <div class="p-6 border-b flex justify-between items-center">
-                <h2 class="text-xl font-bold font-serif italic text-espresso">Order Summary</h2>
-                <button @click="cartOpen = false" class="text-gray-400 hover:text-black">✕ Close</button>
-            </div>
-
-            <div class="flex-1 overflow-y-auto p-6 space-y-6">
-                <template x-if="cart.length === 0">
-                    <div class="text-center py-20">
-                        <p class="text-gray-400">Your cart is empty.</p>
-                    </div>
-                </template>
-                <template x-for="(item, index) in cart" :key="index">
-                    <div class="flex items-center gap-4">
-                        <img :src="item.image" class="w-16 h-16 rounded-xl object-cover">
-                        <div class="flex-1">
-                            <h4 class="font-bold text-sm" x-text="item.name"></h4>
-                            <p class="text-xs text-gray-500" x-text="'Rp ' + (item.price/1000).toFixed(3)"></p>
+    <section id="spaces" class="py-24 bg-espresso text-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-4xl md:text-5xl font-serif italic mb-8 leading-tight">Productive space for productive people.</h2>
+                    <p class="text-gray-400 mb-10 leading-relaxed">Kami menyediakan fasilitas premium untuk kebutuhan kerja Anda. Mulai dari WiFi high-speed, colokan listrik di setiap meja, hingga ruangan yang tenang.</p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex gap-6 p-6 rounded-[2rem] bg-white/5 border border-white/10 hover:bg-white/10 transition">
+                            <div class="text-3xl text-gold">🤝</div>
+                            <div>
+                                <h4 class="font-bold text-lg">Meeting Room</h4>
+                                <p class="text-sm text-gray-500">Kapasitas 6-10 orang, Smart TV, & Whiteboard.</p>
+                                <p class="text-gold font-bold mt-2 text-sm">Mulai Rp 150k / Jam</p>
+                            </div>
                         </div>
-                        <button @click="removeFromCart(index)" class="text-red-400 text-xs">Remove</button>
+                        <div class="flex gap-6 p-6 rounded-[2rem] bg-white/5 border border-white/10 hover:bg-white/10 transition">
+                            <div class="text-3xl text-gold">💼</div>
+                            <div>
+                                <h4 class="font-bold text-lg">Private Office</h4>
+                                <p class="text-sm text-gray-500">Ruang kerja pribadi yang tenang & eksklusif.</p>
+                                <p class="text-gold font-bold mt-2 text-sm">Mulai Rp 500k / Hari</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="mt-12 bg-gold text-white px-10 py-4 rounded-full font-bold uppercase text-[10px] tracking-[0.3em]">Book via WhatsApp</button>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=600" class="rounded-[2rem] h-64 w-full object-cover">
+                    <img src="https://images.unsplash.com/photo-1527335011031-7590558b3a1a?auto=format&fit=crop&q=80&w=600" class="rounded-[2rem] h-64 w-full object-cover mt-12">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" class="py-24">
+        <div class="max-w-7xl mx-auto px-6 text-center mb-16">
+            <h2 class="text-3xl font-serif italic">The Ambiance</h2>
+            <p class="text-gray-400 text-sm mt-2">Dokumentasi suasana di Darmarasha.</p>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 px-4">
+            <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=600" class="h-72 w-full object-cover rounded-3xl hover:opacity-80 transition cursor-pointer">
+            <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=600" class="h-72 w-full object-cover rounded-3xl hover:opacity-80 transition cursor-pointer">
+            <img src="https://images.unsplash.com/photo-1497515114629-f71d768fd07c?auto=format&fit=crop&q=80&w=600" class="h-72 w-full object-cover rounded-3xl hover:opacity-80 transition cursor-pointer">
+            <img src="https://images.unsplash.com/photo-1525648199074-cee30ba79a4a?auto=format&fit=crop&q=80&w=600" class="h-72 w-full object-cover rounded-3xl hover:opacity-80 transition cursor-pointer">
+        </div>
+    </section>
+
+    <footer class="bg-white border-t border-gray-100 pt-20 pb-10">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
+            <div class="col-span-1 md:col-span-2">
+                <h3 class="text-3xl font-black tracking-tighter mb-6">DARMARASHA.</h3>
+                <p class="text-gray-400 max-w-sm mb-8 leading-relaxed text-sm">Ruang temu, kolaborasi, dan secangkir kopi berkualitas. Kami hadir untuk menemani setiap proses kreatif Anda.</p>
+                <div class="flex gap-4">
+                    <a href="#" class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-espresso hover:text-white transition">IG</a>
+                    <a href="#" class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-espresso hover:text-white transition">FB</a>
+                    <a href="#" class="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center hover:bg-espresso hover:text-white transition">TW</a>
+                </div>
+            </div>
+            <div>
+                <h4 class="font-bold mb-6 uppercase text-[10px] tracking-widest text-gold">Contact Us</h4>
+                <ul class="space-y-4 text-sm font-medium text-gray-500">
+                    <li>hello@darmarasha.com</li>
+                    <li>+62 812 3456 7890</li>
+                    <li>Jl. Kopi Senja No. 12, Jakarta</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold mb-6 uppercase text-[10px] tracking-widest text-gold">Support</h4>
+                <ul class="space-y-4 text-sm font-medium text-gray-500">
+                    <li>FAQ</li>
+                    <li>Privacy Policy</li>
+                    <li>Terms of Service</li>
+                </ul>
+            </div>
+        </div>
+        <div class="text-center text-gray-300 text-[10px] font-bold uppercase tracking-widest pt-10 border-t border-gray-50">
+            &copy; 2026 Darmarasha Coffee Roasters. All rights reserved.
+        </div>
+    </footer>
+
+    <div x-show="cartOpen" x-cloak class="fixed inset-0 z-[100] overflow-hidden">
+        <div class="absolute inset-0 bg-espresso/60 backdrop-blur-md" @click="cartOpen = false"></div>
+        <div class="absolute inset-y-0 right-0 max-w-md w-full bg-white shadow-2xl flex flex-col" x-transition:enter="transform transition ease-out duration-300" x-transition:enter-start="translate-x-full">
+            <div class="p-8 border-b flex justify-between items-center bg-gray-50/50">
+                <h2 class="text-2xl font-serif italic text-espresso">Your Cart</h2>
+                <button @click="cartOpen = false" class="p-2 bg-white rounded-full shadow-sm">✕</button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-8 space-y-6">
+                <template x-for="item in cart" :key="item.id">
+                    <div class="flex items-center gap-6">
+                        <img :src="item.image" class="w-20 h-20 rounded-2xl object-cover shadow-sm">
+                        <div class="flex-1">
+                            <h4 class="font-bold text-espresso" x-text="item.name"></h4>
+                            <p class="text-xs text-gold font-bold" x-text="item.qty + ' x Rp ' + (item.price/1000).toFixed(3)"></p>
+                        </div>
+                        <div class="flex items-center gap-3 bg-gray-100 p-1 rounded-xl">
+                            <button @click="updateQty(item, -1)" class="w-6 h-6 flex items-center justify-center font-bold">-</button>
+                            <span class="text-xs font-bold" x-text="item.qty"></span>
+                            <button @click="updateQty(item, 1)" class="w-6 h-6 flex items-center justify-center font-bold">+</button>
+                        </div>
                     </div>
                 </template>
             </div>
-
-            <div x-show="cart.length > 0" class="p-6 bg-gray-50 space-y-4">
-                <div class="flex justify-between font-bold text-lg">
-                    <span>Total</span>
+            <div x-show="cart.length > 0" class="p-8 border-t bg-gray-50 space-y-4">
+                <div class="flex justify-between font-black text-2xl text-espresso">
+                    <span class="font-serif italic text-base">Total</span>
                     <span x-text="'Rp ' + (totalPrice()/1000).toFixed(3)"></span>
                 </div>
-                
-                <div class="space-y-2">
-                    <label class="text-[10px] font-bold uppercase text-gray-400">Select Payment</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button @click="payment = 'GOPAY'" :class="payment === 'GOPAY' ? 'border-espresso bg-espresso text-white' : 'bg-white border-gray-200'" class="border p-3 rounded-xl text-xs font-bold transition">GOPAY</button>
-                        <button @click="payment = 'QRIS'" :class="payment === 'QRIS' ? 'border-espresso bg-espresso text-white' : 'bg-white border-gray-200'" class="border p-3 rounded-xl text-xs font-bold transition">QRIS</button>
-                        <button @click="payment = 'TRANSFER'" :class="payment === 'TRANSFER' ? 'border-espresso bg-espresso text-white' : 'bg-white border-gray-200'" class="border p-3 rounded-xl text-xs font-bold transition">TRANSFER</button>
-                        <button @click="payment = 'CASH'" :class="payment === 'CASH' ? 'border-espresso bg-espresso text-white' : 'bg-white border-gray-200'" class="border p-3 rounded-xl text-xs font-bold transition">CASHIER</button>
-                    </div>
-                </div>
-
-                <button @click="processOrder()" class="w-full bg-espresso text-white py-4 rounded-2xl font-bold hover:bg-black transition shadow-lg shadow-espresso/20 uppercase tracking-widest text-xs">
-                    Confirm Order
-                </button>
+                <button class="w-full bg-espresso text-white py-5 rounded-[1.5rem] font-bold uppercase tracking-[0.2em] text-[10px] shadow-2xl shadow-espresso/20">Confirm Payment</button>
             </div>
         </div>
     </div>
@@ -133,36 +241,52 @@
         function orderSystem() {
             return {
                 cartOpen: false,
-                activeCat: 'Coffee',
-                payment: 'GOPAY',
+                cartChanged: false,
                 cart: [],
-                categories: ['Coffee', 'Non-Coffee', 'Pastry'],
                 menu: [
-                    { id: 1, cat: 'Coffee', name: 'Signature Palm Latte', price: 35000, desc: 'Espresso with organic palm sugar and house-made milk.', image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?q=80&w=500' },
-                    { id: 2, cat: 'Coffee', name: 'Manual Brew V60', price: 32000, desc: 'Selected local beans with clean and floral notes.', image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=500' },
-                    { id: 3, cat: 'Coffee', name: 'Dirty Oat Latte', price: 42000, desc: 'Bold espresso shot with premium oat milk.', image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?q=80&w=500' },
-                    { id: 4, cat: 'Non-Coffee', name: 'Ceremonial Matcha', price: 38000, desc: 'Pure Japanese matcha with creamy textures.', image: 'https://images.unsplash.com/photo-1515823064-d6e0c04616a7?q=80&w=500' },
-                    { id: 5, cat: 'Pastry', name: 'Butter Croissant', price: 28000, desc: 'Flaky layers of French butter goodness.', image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=500' },
-                    { id: 6, cat: 'Pastry', name: 'Pain Au Chocolat', price: 30000, desc: 'Croissant dough with dark chocolate filling.', image: 'https://images.unsplash.com/photo-1530610476181-d83430b64dcd?q=80&w=500' }
+                    { id: 1, name: 'Signature Palm Latte', price: 35000, desc: 'Espresso dengan gula aren organik & house milk.', image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=800' },
+                    { id: 2, name: 'Manual Brew V60', price: 32000, desc: 'Biji kopi artisan yang diseduh dengan teknik V60.', image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=800' },
+                    { id: 3, name: 'Dirty Oat Latte', price: 42000, desc: 'Perpaduan bold espresso dengan susu gandum premium.', image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?auto=format&fit=crop&q=80&w=800' },
+                    { id: 4, name: 'Ceremonial Matcha', price: 38000, desc: 'Matcha murni dari Uji, Jepang dengan tekstur creamy.', image: 'https://images.unsplash.com/photo-1515823064-d6e0c04616a7?auto=format&fit=crop&q=80&w=800' }
                 ],
-                filteredMenu() {
-                    return this.menu.filter(item => item.cat === this.activeCat);
+                updateQty(item, change, event) {
+                    if (change > 0 && event) this.animateFly(item.id);
+                    let cartItem = this.cart.find(i => i.id === item.id);
+                    if (cartItem) {
+                        cartItem.qty += change;
+                        if (cartItem.qty <= 0) this.cart = this.cart.filter(i => i.id !== item.id);
+                    } else if (change > 0) {
+                        this.cart.push({ ...item, qty: 1 });
+                    }
+                    this.cartChanged = true;
+                    setTimeout(() => this.cartChanged = false, 400);
                 },
-                addToCart(item) {
-                    this.cart.push(item);
-                    // Notification simple
-                    console.log('Added:', item.name);
+                getItemQty(id) {
+                    let item = this.cart.find(i => i.id === id);
+                    return item ? item.qty : 0;
                 },
-                removeFromCart(index) {
-                    this.cart.splice(index, 1);
-                },
-                totalPrice() {
-                    return this.cart.reduce((sum, item) => sum + item.price, 0);
-                },
-                processOrder() {
-                    alert(`Order Processed!\nTotal: Rp ${this.totalPrice()}\nPayment: ${this.payment}\n\nTerima kasih telah memesan di Darmarasha.`);
-                    this.cart = [];
-                    this.cartOpen = false;
+                totalItems() { return this.cart.reduce((sum, item) => sum + item.qty, 0); },
+                totalPrice() { return this.cart.reduce((sum, item) => sum + (item.price * item.qty), 0); },
+                animateFly(id) {
+                    const img = document.getElementById('img-' + id);
+                    const cart = document.getElementById('cart-btn');
+                    if (!img || !cart) return;
+                    const imgRect = img.getBoundingClientRect();
+                    const cartRect = cart.getBoundingClientRect();
+                    const clone = img.cloneNode();
+                    clone.classList.add('fly-item');
+                    clone.style.width = imgRect.width + 'px';
+                    clone.style.height = imgRect.height + 'px';
+                    clone.style.top = imgRect.top + 'px';
+                    clone.style.left = imgRect.left + 'px';
+                    document.body.appendChild(clone);
+                    setTimeout(() => {
+                        clone.style.top = (cartRect.top + cartRect.height / 2) + 'px';
+                        clone.style.left = (cartRect.left + cartRect.width / 2) + 'px';
+                        clone.style.width = '20px'; clone.style.height = '20px';
+                        clone.style.opacity = '0.5'; clone.style.transform = 'scale(0.2) rotate(360deg)';
+                    }, 50);
+                    setTimeout(() => clone.remove(), 850);
                 }
             }
         }
