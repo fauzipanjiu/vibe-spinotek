@@ -11,68 +11,122 @@
             theme: {
                 extend: {
                     colors: {
-                        'aksa-light': '#F8FAFC',
+                        'aksa-light': '#F1F5F9',
                         'aksa-connect': '#6366F1',
-                        'aksa-soft': '#EEF2FF',
+                        'aksa-dark': '#0F172A',
                         'aksa-accent': '#10B981',
+                    },
+                    backgroundImage: {
+                        'gradient-aksa': 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
+                        'gradient-dark': 'linear-gradient(180deg, #0F172A 0%, #1E293B 100%)',
                     }
                 }
             }
         }
     </script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-        .nav-link { cursor: pointer; transition: all 0.2s; }
-        .nav-link:hover { background-color: #F1F5F9; color: #6366F1; }
-        .nav-active { background-color: #EEF2FF; color: #6366F1; font-weight: 700; border-right: 4px solid #6366F1; }
-        .content-section { display: none; animation: fadeIn 0.4s ease-out; }
-        .content-active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0F172A; overflow-x: hidden; color: #f8fafc; }
+        
+        /* Particle Background */
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; filter: blur(60px); opacity: 0.3; }
+
+        /* Enhanced Glassmorphism */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .glass-card:hover { background: rgba(255, 255, 255, 0.07); border-color: rgba(99, 102, 241, 0.5); }
+
+        /* Nav Animations */
+        .nav-link { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; opacity: 0.7; }
+        .nav-link:hover { opacity: 1; transform: translateX(8px); color: #6366F1; }
+        .nav-active { 
+            background: rgba(99, 102, 241, 0.15); 
+            color: #6366F1; 
+            font-weight: 800; 
+            opacity: 1;
+            border-left: 4px solid #6366F1;
+        }
+
+        /* Content Transitions */
+        .content-section { display: none; opacity: 0; transform: scale(0.98); }
+        .content-active { 
+            display: block; 
+            animation: reveal 0.6s forwards cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        @keyframes reveal {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Pop Animation for new items */
+        .pop-in { animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes popIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Floating Element */
+        .float { animation: floating 4s ease-in-out infinite; }
+        @keyframes floating {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-15px) rotate(2deg); }
+        }
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
-        /* Animation untuk pesan baru */
-        .pop-in { animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes pop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        /* Interactive Inputs */
+        input, textarea, select {
+            background: rgba(15, 23, 42, 0.6) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+        }
     </style>
 </head>
-<body class="bg-aksa-light text-slate-600 min-h-screen flex">
+<body class="min-h-screen flex">
 
-    <aside class="w-20 lg:w-72 bg-white border-r border-slate-200 hidden md:flex flex-col sticky top-0 h-screen transition-all">
-        <div class="p-8">
-            <h1 class="text-2xl font-black text-slate-900 tracking-tighter uppercase italic">Aksa<span class="text-aksa-connect">Hub.</span></h1>
-            <p class="text-[10px] text-slate-400 font-bold mt-1 tracking-widest uppercase">Community Engine</p>
+    <canvas id="bg-canvas"></canvas>
+
+    <aside class="w-20 lg:w-72 border-r border-white/5 hidden md:flex flex-col sticky top-0 h-screen p-6 bg-aksa-dark/50 backdrop-blur-xl z-50">
+        <div class="mb-12 px-2">
+            <h1 class="text-2xl font-black text-white tracking-tighter italic uppercase">
+                Aksa<span class="text-aksa-connect">Hub.</span>
+            </h1>
+            <div class="h-1.5 w-12 bg-gradient-aksa rounded-full mt-2 animate-pulse"></div>
         </div>
         
-        <nav class="flex-1 px-4 space-y-1" id="main-nav">
-            <div onclick="showSection('discovery')" class="nav-link nav-active flex items-center gap-4 py-3 px-4 rounded-xl text-sm">
-                <span>🔍</span> Discovery
+        <nav class="flex-1 space-y-2" id="main-nav">
+            <div onclick="showSection('discovery')" class="nav-link nav-active flex items-center gap-4 py-4 px-5 rounded-xl text-sm">
+                <span class="text-lg">🔍</span> Discovery
             </div>
-            <div onclick="showSection('projects')" class="nav-link flex items-center gap-4 py-3 px-4 rounded-xl text-sm font-medium">
-                <span>🚀</span> Project Board
+            <div onclick="showSection('projects')" class="nav-link flex items-center gap-4 py-4 px-5 rounded-xl text-sm font-semibold">
+                <span class="text-lg">🚀</span> Project Board
             </div>
-            <div onclick="showSection('wall-of-fame')" class="nav-link flex items-center gap-4 py-3 px-4 rounded-xl text-sm font-medium">
-                <span>🏆</span> Wall of Fame
+            <div onclick="showSection('wall-of-fame')" class="nav-link flex items-center gap-4 py-4 px-5 rounded-xl text-sm font-semibold">
+                <span class="text-lg">🏆</span> Wall of Fame
             </div>
-            <div onclick="showSection('skill-swap')" class="nav-link flex items-center gap-4 py-3 px-4 rounded-xl text-sm font-medium">
-                <span>🤝</span> Skill Swap
+            <div onclick="showSection('skill-swap')" class="nav-link flex items-center gap-4 py-4 px-5 rounded-xl text-sm font-semibold">
+                <span class="text-lg">🤝</span> Skill Swap
             </div>
-            <div onclick="showSection('resources')" class="nav-link flex items-center gap-4 py-3 px-4 rounded-xl text-sm font-medium">
-                <span>📚</span> Resources
+            <div onclick="showSection('resources')" class="nav-link flex items-center gap-4 py-4 px-5 rounded-xl text-sm font-semibold">
+                <span class="text-lg">📚</span> Resources
             </div>
-            <div onclick="showSection('coffee-break')" class="nav-link flex items-center gap-4 py-3 px-4 rounded-xl text-sm font-medium">
-                <span>☕</span> Coffee Break
+            <div onclick="showSection('coffee-break')" class="nav-link flex items-center gap-4 py-4 px-5 rounded-xl text-sm font-semibold">
+                <span class="text-lg">☕</span> Coffee Break
             </div>
-            <div onclick="showSection('gifting')" class="nav-link flex items-center gap-4 py-3 px-4 rounded-xl text-sm font-medium text-pink-500">
-                <span>🎁</span> Send a Treat
+            <div onclick="showSection('gifting')" class="nav-link flex items-center gap-4 py-4 px-5 rounded-xl text-sm font-semibold text-pink-400">
+                <span class="text-lg">🎁</span> Send a Treat
             </div>
         </nav>
 
-        <div class="p-6 border-t border-slate-100">
-            <div class="bg-slate-900 text-white p-4 rounded-2xl">
-                <p class="text-[9px] font-bold text-slate-400 uppercase mb-2">Wi-Fi Status</p>
-                <div class="flex items-center gap-2">
-                    <div class="w-2 h-2 bg-aksa-accent rounded-full animate-pulse"></div>
-                    <span class="text-xs font-mono">AKSA_PRO_5G</span>
+        <div class="mt-auto">
+            <div class="glass-card p-5 rounded-3xl relative overflow-hidden group border-indigo-500/30">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Network Status</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-2.5 h-2.5 bg-aksa-accent rounded-full animate-ping shadow-[0_0_10px_#10B981]"></div>
+                    <span class="text-xs font-mono text-white tracking-tighter">AKSA_PRO_5G</span>
                 </div>
             </div>
         </div>
@@ -81,156 +135,194 @@
     <main class="flex-1 p-6 lg:p-12 overflow-y-auto">
         
         <section id="discovery" class="content-section content-active">
-            <div class="mb-10">
-                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Cek Siapa Aja di Sini 👋</h2>
-                <p class="text-slate-500 mt-1 italic text-sm">Temukan partner kolaborasi di meja sebelah.</p>
+            <div class="mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div>
+                    <h2 class="text-5xl font-black text-white tracking-tight mb-2">Discovery 👋</h2>
+                    <p class="text-slate-400 font-medium italic">Temukan kolaborator potensial di sekitar Anda.</p>
+                </div>
+                <button onclick="toggleModal('statusModal')" class="bg-gradient-aksa text-white px-8 py-4 rounded-2xl text-xs font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl shadow-indigo-500/20">
+                    Update My Status
+                </button>
             </div>
 
-            <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="flex gap-4">
-                            <div class="w-14 h-14 bg-aksa-soft rounded-2xl flex items-center justify-center text-aksa-connect font-black text-xl">BN</div>
-                            <div>
-                                <h4 class="text-md font-bold text-slate-900">Bimo Nugroho</h4>
-                                <p class="text-[10px] font-bold text-slate-400 uppercase">iOS Developer • Meja 12</p>
-                            </div>
-                        </div>
-                        <span class="bg-green-100 text-green-600 text-[8px] font-black px-2 py-1 rounded-full uppercase tracking-widest">Available</span>
+            <div id="statusModal" class="hidden mb-12 glass-card p-10 rounded-[3rem] border-2 border-aksa-connect/30 pop-in">
+                <h3 class="text-xl font-bold mb-6 text-white italic">Lagi sibuk apa hari ini?</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <input type="text" id="discoName" placeholder="Nama Lengkap" class="p-4 rounded-2xl outline-none text-sm focus:ring-2 focus:ring-aksa-connect transition-all">
+                    <input type="text" id="discoRole" placeholder="Role (ex: Creative Director)" class="p-4 rounded-2xl outline-none text-sm focus:ring-2 focus:ring-aksa-connect transition-all">
+                    <input type="text" id="discoTable" placeholder="Nomor Meja" class="p-4 rounded-2xl outline-none text-sm focus:ring-2 focus:ring-aksa-connect transition-all">
+                    <textarea id="discoBio" placeholder="Lagi ngerjain apa?" class="p-4 rounded-2xl outline-none text-sm md:col-span-2 h-24 focus:ring-2 focus:ring-aksa-connect transition-all"></textarea>
+                    <select id="discoMode" class="p-4 rounded-2xl outline-none text-sm font-bold text-aksa-connect">
+                        <option value="Available">Available for Chat</option>
+                        <option value="Deep Work">Deep Work Mode</option>
+                    </select>
+                    <div class="md:col-span-3 flex justify-end gap-4 mt-4">
+                        <button onclick="toggleModal('statusModal')" class="text-xs font-bold uppercase text-slate-400 hover:text-white transition-colors">Dismiss</button>
+                        <button onclick="addNewStatus()" class="bg-white text-aksa-dark px-10 py-4 rounded-2xl text-xs font-black uppercase tracking-widest shadow-lg">Broadcast Status</button>
                     </div>
-                    <p class="text-xs text-slate-500 mb-6 bg-slate-50 p-4 rounded-xl leading-relaxed italic">"Lagi build aplikasi logistik. Butuh insight soal flow gudang. Ngobrol yuk!"</p>
-                    <button class="w-full py-3 bg-aksa-connect text-white text-[10px] font-bold rounded-xl uppercase tracking-widest shadow-lg shadow-indigo-100">Say Hi on WhatsApp</button>
                 </div>
-                
-                <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm opacity-60">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="flex gap-4">
-                            <div class="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400 font-black text-xl">SP</div>
+            </div>
+
+            <div id="discoveryGrid" class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                <div class="glass-card p-8 rounded-[2.5rem] group relative overflow-hidden">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="flex gap-5">
+                            <div class="w-16 h-16 bg-gradient-aksa text-white rounded-3xl flex items-center justify-center font-black text-2xl shadow-lg float">BN</div>
                             <div>
-                                <h4 class="text-md font-bold text-slate-900">Siska Putri</h4>
-                                <p class="text-[10px] font-bold text-slate-400 uppercase">Copywriter • Meja 05</p>
+                                <h4 class="text-lg font-bold text-white">Bimo Nugroho</h4>
+                                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-tighter">iOS Developer • Meja 12</p>
                             </div>
                         </div>
-                        <span class="bg-slate-100 text-slate-400 text-[8px] font-black px-2 py-1 rounded-full italic uppercase">Deep Work</span>
+                        <span class="bg-emerald-500/20 text-emerald-400 text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest border border-emerald-500/30">Available</span>
                     </div>
-                    <p class="text-xs text-slate-300 mb-6 text-center py-4 italic">Siska sedang fokus nulis naskah. <br> Ganggu nanti aja ya!</p>
+                    <p class="text-sm text-slate-300 mb-8 bg-white/5 p-6 rounded-3xl leading-relaxed italic border border-white/5">"Lagi build aplikasi logistik. Butuh insight soal flow gudang. Ngobrol yuk!"</p>
+                    <button class="w-full py-4 bg-white text-aksa-dark text-xs font-black rounded-2xl uppercase tracking-widest hover:bg-aksa-connect hover:text-white transition-all transform active:scale-95">Connect Now</button>
                 </div>
             </div>
         </section>
 
         <section id="projects" class="content-section">
-            <div class="mb-10">
-                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Project Board 🚀</h2>
-                <p class="text-slate-500 mt-1 text-sm italic">Cuan sampingan atau partner startup? Cek di bawah.</p>
+            <div class="mb-12">
+                <h2 class="text-5xl font-black text-white tracking-tight mb-2">Project Board 🚀</h2>
+                <p class="text-slate-400 italic">Kolaborasi nyata, hasil nyata.</p>
             </div>
-            <div class="space-y-4">
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 flex justify-between items-center hover:border-aksa-connect transition-all">
-                    <div>
-                        <span class="text-[9px] font-bold text-aksa-accent bg-emerald-50 px-2 py-1 rounded uppercase tracking-widest">Paid Job</span>
-                        <h4 class="text-md font-bold text-slate-800 mt-2 italic">Landing Page Designer (3 Days)</h4>
-                        <p class="text-[11px] text-slate-500 mt-1 italic tracking-tight uppercase">Client: @Dhimas (Meja 09)</p>
+            <div class="grid gap-6">
+                <div class="glass-card p-8 rounded-[2rem] flex flex-col md:flex-row justify-between items-start md:items-center hover:scale-[1.01] transition-all group">
+                    <div class="mb-4 md:mb-0">
+                        <span class="text-[10px] font-black text-aksa-accent bg-aksa-accent/10 px-3 py-1.5 rounded-lg uppercase tracking-widest mb-3 inline-block border border-aksa-accent/20">Paid Gig</span>
+                        <h4 class="text-xl font-bold text-white italic group-hover:text-aksa-connect transition-colors">Landing Page Designer (3 Days)</h4>
+                        <p class="text-xs text-slate-400 mt-2 uppercase tracking-tighter">Client: @Dhimas (Meja 09)</p>
                     </div>
-                    <button class="px-6 py-2 bg-slate-900 text-white text-[10px] font-bold rounded-lg uppercase">Ambil</button>
+                    <button class="px-10 py-4 bg-aksa-connect text-white text-xs font-black rounded-xl uppercase tracking-widest hover:bg-white hover:text-aksa-dark transition-all shadow-lg">Apply Now</button>
                 </div>
             </div>
         </section>
 
         <section id="wall-of-fame" class="content-section">
-            <div class="mb-10 flex flex-col md:flex-row justify-between items-end gap-4">
+            <div class="mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
                 <div>
-                    <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Aksa Wall of Fame 🏆</h2>
-                    <p class="text-slate-500 mt-1 text-sm italic italic">Karya keren yang lahir dari meja Aksa Coffee.</p>
+                    <h2 class="text-5xl font-black text-white tracking-tight mb-2">Wall of Fame 🏆</h2>
+                    <p class="text-slate-400 italic">Karya hebat yang lahir di sini.</p>
                 </div>
-                <button onclick="document.getElementById('uploadModal').classList.toggle('hidden')" class="bg-aksa-connect text-white px-6 py-3 rounded-2xl text-[10px] font-bold uppercase tracking-widest shadow-lg shadow-indigo-100">Post Karya Kamu</button>
+                <button onclick="toggleModal('uploadModal')" class="bg-gradient-aksa text-white px-8 py-4 rounded-2xl text-xs font-black uppercase tracking-widest">Post Karya Kamu</button>
             </div>
-
-            <div id="uploadModal" class="hidden mb-10 bg-indigo-50 p-8 rounded-[2rem] border-2 border-dashed border-indigo-200 pop-in">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" id="postTitle" placeholder="Judul Karya (Contoh: Aplikasi Kopi)" class="p-4 rounded-xl border-none outline-none text-xs shadow-sm">
-                    <input type="text" id="postAuthor" placeholder="Nama Kamu" class="p-4 rounded-xl border-none outline-none text-xs shadow-sm">
-                    <textarea id="postDesc" placeholder="Ceritakan proses kreatifmu di Aksa..." class="p-4 rounded-xl border-none outline-none text-xs shadow-sm md:col-span-2 h-24"></textarea>
-                    <div class="md:col-span-2 flex justify-end gap-3">
-                        <button onclick="document.getElementById('uploadModal').classList.add('hidden')" class="text-[10px] font-bold uppercase text-slate-400">Batal</button>
-                        <button onclick="addNewPost()" class="bg-aksa-connect text-white px-8 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest">Publish Sekarang</button>
-                    </div>
+            
+            <div id="uploadModal" class="hidden mb-12 glass-card p-10 rounded-[3rem] border-2 border-dashed border-white/20 pop-in">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <input type="text" id="postTitle" placeholder="Judul Karya" class="p-4 rounded-2xl outline-none text-sm">
+                    <input type="text" id="postAuthor" placeholder="Nama Kamu" class="p-4 rounded-2xl outline-none text-sm">
+                    <textarea id="postDesc" placeholder="Ceritakan proses kreatifnya..." class="p-4 rounded-2xl outline-none text-sm md:col-span-2 h-24"></textarea>
+                    <button onclick="addNewPost()" class="bg-white text-aksa-dark px-10 py-4 rounded-2xl text-xs font-black uppercase tracking-widest md:col-span-2 shadow-lg">Publish to Wall</button>
                 </div>
             </div>
 
-            <div id="wallGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 p-6 text-4xl opacity-20">🎨</div>
-                    <h4 class="text-[10px] font-bold text-aksa-connect uppercase tracking-[0.2em] mb-4">UI Design Portfolio</h4>
-                    <h3 class="text-xl font-bold text-slate-800 mb-2 italic">Eco-Living App</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed mb-6 italic">"Desain aplikasi ini 90% selesai dikerjakan di sofa pojok Aksa."</p>
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-full bg-slate-200"></div>
-                        <span class="text-[10px] font-bold text-slate-800 uppercase italic">By Raka Fajri</span>
+            <div id="wallGrid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="glass-card p-10 rounded-[3rem] relative overflow-hidden group">
+                    <div class="absolute -right-6 -top-6 w-32 h-32 bg-aksa-connect/10 rounded-full blur-3xl group-hover:bg-aksa-connect/20 transition-all"></div>
+                    <span class="text-[11px] font-black text-aksa-connect uppercase tracking-[0.3em] mb-4 block">Product Showcase</span>
+                    <h3 class="text-2xl font-black text-white mb-3 italic">Eco-Living App</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed mb-8 italic">"Desain aplikasi ini 90% selesai dikerjakan di sofa pojok Aksa. Kolaborasi dengan @Raka."</p>
+                    <div class="flex items-center gap-4 border-t border-white/5 pt-6">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-aksa flex items-center justify-center text-white font-bold shadow-lg">RF</div>
+                        <span class="text-[11px] font-bold text-white uppercase italic">By Raka Fajri</span>
                     </div>
                 </div>
             </div>
         </section>
 
         <section id="skill-swap" class="content-section">
-            <div class="mb-10">
-                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight italic">Skill Swap 🤝</h2>
-                <p class="text-slate-500 mt-1 text-sm">Gak perlu bayar kursus, barter ilmu aja di sini.</p>
+             <div class="mb-12 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div>
+                    <h2 class="text-5xl font-black text-white tracking-tight italic mb-2">Skill Swap 🤝</h2>
+                    <p class="text-slate-400 italic">Barter ilmu, bukan materi.</p>
+                </div>
+                <button onclick="toggleModal('skillModal')" class="bg-indigo-600 text-white px-8 py-4 rounded-2xl text-xs font-black uppercase tracking-widest shadow-xl">Buka Barter Baru</button>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="p-6 bg-indigo-600 rounded-3xl text-white shadow-lg shadow-indigo-100">
-                    <h4 class="font-bold text-sm italic mb-2 uppercase tracking-widest">Gue kasih: SEO Content</h4>
-                    <p class="text-xs opacity-80 mb-6 italic">"Gue ajarin cara artikel lo nongol di Page 1 Google."</p>
-                    <p class="text-[9px] font-bold uppercase border-t border-white/20 pt-4 tracking-widest">Butuh: UI Design Insight</p>
+            
+            <div id="skillModal" class="hidden mb-12 bg-aksa-connect/20 border border-aksa-connect/30 p-10 rounded-[3rem] pop-in">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <input type="text" id="skillGive" placeholder="Gue Bisa (ex: Copywriting)" class="p-4 rounded-2xl text-sm">
+                    <input type="text" id="skillTake" placeholder="Gue Pengen Belajar (ex: Figma)" class="p-4 rounded-2xl text-sm">
+                    <textarea id="skillNote" placeholder="Tulis detail singkat..." class="p-4 rounded-2xl text-sm md:col-span-2 h-24"></textarea>
+                    <button onclick="addNewSkillSwap()" class="bg-white text-aksa-connect px-10 py-4 rounded-2xl text-xs font-black uppercase tracking-widest md:col-span-2 shadow-lg">Publish Barter</button>
+                </div>
+            </div>
+
+            <div id="skillGrid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="p-8 glass-card rounded-[2.5rem] border-l-[12px] border-aksa-connect hover:translate-x-2">
+                    <h4 class="font-black text-xs italic mb-4 uppercase tracking-widest text-aksa-connect">Offering: SEO Content</h4>
+                    <p class="text-lg font-bold mb-8 italic text-white">"Gue ajarin cara artikel lo nongol di Page 1 Google."</p>
+                    <div class="pt-6 border-t border-white/5">
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">In Exchange For:</p>
+                        <p class="text-md font-bold italic text-white uppercase">UI Design Insight</p>
+                    </div>
                 </div>
             </div>
         </section>
 
         <section id="resources" class="content-section">
-            <div class="mb-10">
-                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight italic">Resources 📚</h2>
-                <p class="text-slate-500 mt-1 text-sm">Pinjam barang biar kerja makin lancar.</p>
+            <div class="mb-12">
+                <h2 class="text-5xl font-black text-white tracking-tight mb-2 italic text-center md:text-left">Resources 📚</h2>
             </div>
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-white p-6 rounded-2xl text-center border border-slate-100">
-                    <span class="text-3xl block mb-2">🔌</span>
-                    <p class="text-[10px] font-bold uppercase italic">Universal Adapter</p>
-                    <p class="text-[9px] text-aksa-accent font-bold mt-2">TERSEDIA (4)</p>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass-card p-8 rounded-[2.5rem] text-center group">
+                    <div class="text-5xl mb-4 group-hover:scale-125 transition-transform duration-500">🔌</div>
+                    <p class="text-[11px] font-black uppercase italic text-slate-400 tracking-widest">Universal Adapter</p>
+                    <p class="text-[10px] text-aksa-accent font-black mt-3 bg-aksa-accent/10 py-1.5 rounded-full px-4 inline-block border border-aksa-accent/20">4 AVAILABLE</p>
+                </div>
+                <div class="glass-card p-8 rounded-[2.5rem] text-center group">
+                    <div class="text-5xl mb-4 group-hover:scale-125 transition-transform duration-500">🎧</div>
+                    <p class="text-[11px] font-black uppercase italic text-slate-400 tracking-widest">Noise Cancelling</p>
+                    <p class="text-[10px] text-aksa-accent font-black mt-3 bg-aksa-accent/10 py-1.5 rounded-full px-4 inline-block border border-aksa-accent/20">2 AVAILABLE</p>
                 </div>
             </div>
         </section>
 
         <section id="coffee-break" class="content-section">
-            <div class="max-w-2xl mx-auto bg-white rounded-[2.5rem] shadow-xl overflow-hidden border border-slate-100">
-                <div class="p-6 bg-slate-900 text-white flex justify-between items-center">
-                    <h3 class="font-bold text-sm italic tracking-widest uppercase italic">Kedai Chat ☕</h3>
-                    <span class="text-[9px] bg-aksa-accent text-white px-2 py-1 rounded">LIVE</span>
+            <div class="max-w-3xl mx-auto glass-card rounded-[3rem] shadow-2xl overflow-hidden">
+                <div class="p-8 bg-aksa-dark border-b border-white/5 flex justify-between items-center">
+                    <div>
+                        <h3 class="font-black text-lg italic tracking-widest uppercase">Kedai Chat ☕</h3>
+                        <p class="text-[9px] text-slate-500 uppercase tracking-widest mt-1">Real-time Lounge</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></span>
+                        <span class="text-[10px] font-bold uppercase text-emerald-400">Online</span>
+                    </div>
                 </div>
-                <div id="chatMessages" class="p-8 space-y-4 h-96 overflow-y-auto no-scrollbar bg-slate-50">
-                    <div class="flex gap-3">
-                        <div class="w-8 h-8 rounded-full bg-indigo-200"></div>
-                        <div class="bg-white p-3 rounded-2xl rounded-tl-none text-[11px] shadow-sm max-w-[80%] italic">
-                            <span class="font-bold block text-aksa-connect mb-1 uppercase tracking-tighter">@Raka</span>
+                <div id="chatMessages" class="p-10 space-y-6 h-[450px] overflow-y-auto no-scrollbar">
+                    <div class="flex gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-500/20 flex-shrink-0 flex items-center justify-center font-bold text-indigo-400">RK</div>
+                        <div class="glass-card p-5 rounded-2xl rounded-tl-none text-xs text-slate-300 italic max-w-[80%]">
+                            <span class="font-black block text-indigo-400 mb-1 uppercase text-[9px]">@Raka</span>
                             Ada yang tau spot colokan yang paling dingin gak?
                         </div>
                     </div>
                 </div>
-                <div class="p-4 bg-white border-t border-slate-100 flex gap-4">
-                    <input type="text" id="chatInput" placeholder="Tanya sesuatu ke anak Aksa..." class="flex-1 bg-slate-100 border-none rounded-xl px-4 text-xs focus:ring-2 focus:ring-aksa-connect outline-none">
-                    <button onclick="sendMessage()" class="bg-aksa-connect text-white px-6 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest shadow-md">Kirim</button>
+                <div class="p-6 bg-aksa-dark/80 flex gap-4 border-t border-white/5">
+                    <input type="text" id="chatInput" placeholder="Tulis sesuatu..." class="flex-1 rounded-2xl px-6 text-sm outline-none focus:border-indigo-500">
+                    <button onclick="sendMessage()" class="bg-gradient-aksa text-white px-10 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg">Kirim</button>
                 </div>
             </div>
         </section>
 
         <section id="gifting" class="content-section">
-            <div class="mb-10 text-center">
-                <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Kirim Semangat! 🎁</h2>
-                <p class="text-slate-500 mt-1 italic text-sm">Traktir temen baru tanpa harus canggung.</p>
+            <div class="mb-12 text-center">
+                <h2 class="text-5xl font-black text-white mb-2">Traktiran! 🎁</h2>
+                <p class="text-slate-400 font-medium italic">Kirim energi kecil ke teman semeja.</p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-white p-8 rounded-[2rem] border border-slate-200 text-center hover:scale-105 transition-all">
-                    <span class="text-4xl block mb-4">☕</span>
-                    <h4 class="font-bold text-slate-800 text-sm uppercase italic">Manual Brew</h4>
-                    <p class="text-[10px] text-slate-400 mb-6 italic italic">Buat temen coding malam.</p>
-                    <button class="w-full py-3 bg-pink-500 text-white text-[10px] font-bold rounded-xl uppercase tracking-widest">Kirim ke Meja</button>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="glass-card p-8 rounded-[3rem] text-center hover:translate-y-[-10px] shadow-xl group">
+                    <div class="text-5xl mb-6 float">☕</div>
+                    <h4 class="font-black text-white text-sm uppercase italic mb-2">Manual Brew</h4>
+                    <p class="text-[11px] text-slate-400 mb-8 italic">Support buat logic berat.</p>
+                    <button class="w-full py-4 bg-pink-600 text-white text-[10px] font-black rounded-2xl uppercase tracking-widest shadow-lg hover:bg-pink-500">Send (25k)</button>
+                </div>
+                <div class="glass-card p-8 rounded-[3rem] text-center hover:translate-y-[-10px] shadow-xl group">
+                    <div class="text-5xl mb-6 float" style="animation-delay: 1s">🥐</div>
+                    <h4 class="font-black text-white text-sm uppercase italic mb-2">Croissant</h4>
+                    <p class="text-[11px] text-slate-400 mb-8 italic">Teman setia brainstorm.</p>
+                    <button class="w-full py-4 bg-pink-600 text-white text-[10px] font-black rounded-2xl uppercase tracking-widest shadow-lg hover:bg-pink-500">Send (22k)</button>
                 </div>
             </div>
         </section>
@@ -238,100 +330,139 @@
     </main>
 
     <script>
-        // Navigasi
+        // 1. Particle System
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            for(let i=0; i<6; i++) particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 200 + 100,
+                color: Math.random() > 0.5 ? '#6366F1' : '#10B981',
+                vx: (Math.random() - 0.5) * 1,
+                vy: (Math.random() - 0.5) * 1
+            });
+        }
+        function drawParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.x += p.vx; p.y += p.vy;
+                if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.fill();
+            });
+            requestAnimationFrame(drawParticles);
+        }
+        window.addEventListener('resize', initCanvas);
+        initCanvas(); drawParticles();
+
+        // 2. Navigation
         function showSection(sectionId) {
-            const sections = document.querySelectorAll('.content-section');
-            sections.forEach(s => s.classList.remove('content-active'));
-
-            const activeSection = document.getElementById(sectionId);
-            if (activeSection) activeSection.classList.add('content-active');
-
-            const navLinks = document.querySelectorAll('.nav-link');
-            navLinks.forEach(link => {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('content-active'));
+            document.getElementById(sectionId).classList.add('content-active');
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('nav-active');
-                if (link.innerText.toLowerCase().includes(sectionId.split('-')[0])) {
+                if (link.innerText.toLowerCase().includes(sectionId.split('-')[0].toLowerCase())) {
                     link.classList.add('nav-active');
                 }
             });
         }
 
-        // Fitur Tambah Post (Wall of Fame)
+        // 3. Modals & Interaction Logic (ALL FEATURES RETAINED)
+        function toggleModal(id) {
+            document.getElementById(id).classList.toggle('hidden');
+        }
+
+        function addNewStatus() {
+            const name = document.getElementById('discoName').value;
+            const role = document.getElementById('discoRole').value;
+            const table = document.getElementById('discoTable').value;
+            const bio = document.getElementById('discoBio').value;
+            const mode = document.getElementById('discoMode').value;
+            if(!name || !role) return alert("Isi minimal Nama dan Role ya!");
+
+            const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+            const statusClass = mode === "Available" ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30" : "bg-red-500/20 text-red-400 border-red-500/30";
+            
+            const card = `
+                <div class="glass-card p-8 rounded-[2.5rem] pop-in">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="flex gap-5">
+                            <div class="w-16 h-16 bg-gradient-aksa text-white rounded-3xl flex items-center justify-center font-black text-2xl shadow-lg">${initials}</div>
+                            <div>
+                                <h4 class="text-lg font-bold text-white">${name}</h4>
+                                <p class="text-[11px] font-bold text-slate-400 uppercase">Meja ${table} • ${role}</p>
+                            </div>
+                        </div>
+                        <span class="${statusClass} text-[9px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest border">${mode}</span>
+                    </div>
+                    <p class="text-sm text-slate-300 mb-8 bg-white/5 p-6 rounded-3xl italic">"${bio}"</p>
+                    <button class="w-full py-4 bg-white text-aksa-dark text-xs font-black rounded-2xl uppercase tracking-widest">Connect Now</button>
+                </div>`;
+            document.getElementById('discoveryGrid').insertAdjacentHTML('afterbegin', card);
+            toggleModal('statusModal');
+        }
+
+        function addNewSkillSwap() {
+            const give = document.getElementById('skillGive').value;
+            const take = document.getElementById('skillTake').value;
+            const note = document.getElementById('skillNote').value;
+            if(!give || !take) return alert("Lengkapi data barter!");
+
+            const card = `
+                <div class="p-8 glass-card rounded-[2.5rem] border-l-[12px] border-aksa-accent pop-in">
+                    <h4 class="font-black text-xs italic mb-4 uppercase tracking-widest text-aksa-accent">Offering: ${give}</h4>
+                    <p class="text-lg font-bold mb-8 italic text-white">"${note}"</p>
+                    <div class="pt-6 border-t border-white/5">
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">In Exchange For:</p>
+                        <p class="text-md font-bold italic text-white uppercase">${take}</p>
+                    </div>
+                </div>`;
+            document.getElementById('skillGrid').insertAdjacentHTML('afterbegin', card);
+            toggleModal('skillModal');
+        }
+
         function addNewPost() {
             const title = document.getElementById('postTitle').value;
             const author = document.getElementById('postAuthor').value;
             const desc = document.getElementById('postDesc').value;
+            if(!title || !author) return alert("Lengkapi judul dan pencipta!");
 
-            if(!title || !author || !desc) {
-                alert("Lengkapi data karyamu dulu ya!");
-                return;
-            }
-
-            const wallGrid = document.getElementById('wallGrid');
-            const newPostHTML = `
-                <div class="bg-white p-8 rounded-[2rem] border-2 border-aksa-connect shadow-lg relative overflow-hidden pop-in">
-                    <div class="absolute top-0 right-0 p-6 text-4xl opacity-10 uppercase font-black">NEW</div>
-                    <h4 class="text-[10px] font-bold text-aksa-accent uppercase tracking-[0.2em] mb-4">Community Project</h4>
-                    <h3 class="text-xl font-bold text-slate-800 mb-2 italic">${title}</h3>
-                    <p class="text-xs text-slate-500 leading-relaxed mb-6 italic">"${desc}"</p>
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-full bg-aksa-soft flex items-center justify-center font-bold text-aksa-connect text-[10px] italic">${author.charAt(0).toUpperCase()}</div>
-                        <span class="text-[10px] font-bold text-slate-800 uppercase italic">By ${author}</span>
+            const card = `
+                <div class="glass-card p-10 rounded-[3rem] pop-in">
+                    <h3 class="text-2xl font-black mb-3 text-white italic">${title}</h3>
+                    <p class="text-sm text-slate-400 mb-6 leading-relaxed">${desc}</p>
+                    <div class="flex items-center gap-2">
+                         <div class="h-0.5 w-8 bg-aksa-connect"></div>
+                         <span class="text-[10px] font-black uppercase text-aksa-connect">By ${author}</span>
                     </div>
-                </div>
-            `;
-
-            wallGrid.insertAdjacentHTML('afterbegin', newPostHTML);
-            
-            // Reset & Close
-            document.getElementById('postTitle').value = '';
-            document.getElementById('postAuthor').value = '';
-            document.getElementById('postDesc').value = '';
-            document.getElementById('uploadModal').classList.add('hidden');
+                </div>`;
+            document.getElementById('wallGrid').insertAdjacentHTML('afterbegin', card);
+            toggleModal('uploadModal');
         }
 
-        // Fitur Interaksi Chat (Coffee Break)
         function sendMessage() {
-            const chatInput = document.getElementById('chatInput');
-            const chatMessages = document.getElementById('chatMessages');
-            
-            if(!chatInput.value.trim()) return;
-
-            const messageHTML = `
-                <div class="flex gap-3 flex-row-reverse pop-in">
-                    <div class="w-8 h-8 rounded-full bg-aksa-connect flex items-center justify-center text-[10px] font-bold text-white italic">ME</div>
-                    <div class="bg-aksa-connect p-3 rounded-2xl rounded-tr-none text-[11px] text-white shadow-sm max-w-[80%] italic">
-                        ${chatInput.value}
+            const input = document.getElementById('chatInput');
+            if(!input.value.trim()) return;
+            const msg = `
+                <div class="flex gap-4 flex-row-reverse pop-in">
+                    <div class="bg-gradient-aksa p-5 rounded-[2rem] rounded-tr-none text-white text-xs shadow-lg max-w-[80%]">
+                        ${input.value}
                     </div>
-                </div>
-            `;
-
-            chatMessages.insertAdjacentHTML('beforeend', messageHTML);
-            chatInput.value = '';
-            
-            // Auto scroll ke bawah
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            // Simulasi balasan (Opsional)
-            setTimeout(() => {
-                const replyHTML = `
-                    <div class="flex gap-3 pop-in">
-                        <div class="w-8 h-8 rounded-full bg-slate-300"></div>
-                        <div class="bg-white p-3 rounded-2xl rounded-tl-none text-[11px] shadow-sm max-w-[80%] italic">
-                            <span class="font-bold block text-slate-400 mb-1 uppercase tracking-tighter">@System</span>
-                            Pesan kamu terkirim ke member Aksa yang aktif!
-                        </div>
-                    </div>
-                `;
-                chatMessages.insertAdjacentHTML('beforeend', replyHTML);
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 1000);
+                </div>`;
+            const box = document.getElementById('chatMessages');
+            box.insertAdjacentHTML('beforeend', msg);
+            input.value = '';
+            box.scrollTop = box.scrollHeight;
         }
-
-        // Jalankan chat via tombol Enter
-        document.getElementById('chatInput').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') sendMessage();
-        });
     </script>
-
 </body>
 </html>
