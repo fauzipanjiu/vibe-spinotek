@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vocab Battle - Rocket Race</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="h-screen flex flex-col p-4 gap-4">
+    <div
+      class="flex justify-between items-center px-6 py-3 bg-white/10 rounded-2xl border border-white/20 shadow-lg"
+    >
+      <div class="flex flex-col">
+        <h1
+          class="text-3xl font-black tracking-tighter text-yellow-400 leading-none"
+        >
+          🚀 VOCAB BATTLE
+        </h1>
+        <a
+          href="https://spinotek.com"
+          target="_blank"
+          class="credit-link text-xs font-bold text-gray-400 mt-1 uppercase tracking-widest"
+        >
+          by Spinotek
+        </a>
+      </div>
+      <div
+        class="hidden md:block text-xl font-bold bg-blue-500/20 px-6 py-2 rounded-full text-blue-300 border border-blue-500/30 animate__animated animate__fadeIn"
+      >
+        Race to the Moon! 🌙
+      </div>
+    </div>
+
+    <div class="flex flex-1 gap-4">
+      <div class="race-track flex flex-col items-center py-6">
+        <div
+          class="text-[10px] font-black text-blue-400 mb-2 uppercase tracking-tighter"
+        >
+          TEAM 1
+        </div>
+        <div class="relative flex-1 w-full">
+          <div id="rocket1" class="rocket">
+            🚀
+            <div
+              class="fire-particle absolute -bottom-4 left-1/2 -translate-x-1/2 text-xl opacity-0 transition-opacity duration-300"
+            >
+              🔥
+            </div>
+          </div>
+        </div>
+        <div class="mt-auto text-3xl">🌍</div>
+      </div>
+
+      <div
+        id="side-1"
+        class="flex-1 bg-blue-600/20 rounded-3xl border-4 border-blue-500/50 p-6 flex flex-col relative"
+      >
+        <div class="text-center mb-4">
+          <p id="score1" class="text-6xl font-black text-blue-400">0</p>
+        </div>
+        <div
+          class="flex-1 bg-slate-800 rounded-2xl p-6 flex flex-col items-center justify-center relative shadow-2xl border border-white/10"
+        >
+          <div
+            id="timer1"
+            class="absolute top-4 right-4 w-14 h-14 rounded-full border-4 border-blue-500 flex items-center justify-center text-2xl font-black text-blue-400"
+          >
+            10
+          </div>
+          <h1 id="q1" class="text-5xl font-black mb-10 text-center text-white">
+            ...
+          </h1>
+          <div id="choices1" class="grid grid-cols-2 gap-4 w-full"></div>
+        </div>
+      </div>
+
+      <div
+        id="side-2"
+        class="flex-1 bg-red-600/20 rounded-3xl border-4 border-red-500/50 p-6 flex flex-col relative"
+      >
+        <div class="text-center mb-4">
+          <p id="score2" class="text-6xl font-black text-red-400">0</p>
+        </div>
+        <div
+          class="flex-1 bg-slate-800 rounded-2xl p-6 flex flex-col items-center justify-center relative shadow-2xl border border-white/10"
+        >
+          <div
+            id="timer2"
+            class="absolute top-4 left-4 w-14 h-14 rounded-full border-4 border-red-500 flex items-center justify-center text-2xl font-black text-red-400"
+          >
+            10
+          </div>
+          <h1 id="q2" class="text-5xl font-black mb-10 text-center text-white">
+            ...
+          </h1>
+          <div id="choices2" class="grid grid-cols-2 gap-4 w-full"></div>
+        </div>
+      </div>
+
+      <div class="race-track flex flex-col items-center py-6">
+        <div
+          class="text-[10px] font-black text-red-400 mb-2 uppercase tracking-tighter"
+        >
+          TEAM 2
+        </div>
+        <div class="relative flex-1 w-full">
+          <div id="rocket2" class="rocket">
+            🚀
+            <div
+              class="fire-particle absolute -bottom-4 left-1/2 -translate-x-1/2 text-xl opacity-0 transition-opacity duration-300"
+            >
+              🔥
+            </div>
+          </div>
+        </div>
+        <div class="mt-auto text-3xl">🌍</div>
+      </div>
+    </div>
+
+    <div
+      id="overlay"
+      class="fixed inset-0 z-50 flex items-center justify-center p-10"
+    >
+      <div
+        id="menu-content"
+        class="text-center relative p-12 bg-slate-800/50 rounded-[4rem] border-4 border-white/10 backdrop-blur-sm shadow-2xl"
+      >
+        <div class="floating-icon top-0 left-0" style="animation-delay: 0s">
+          📚
+        </div>
+        <div class="floating-icon bottom-0 right-0" style="animation-delay: 1s">
+          ⭐
+        </div>
+        <div class="floating-icon top-10 right-20" style="animation-delay: 2s">
+          ✏️
+        </div>
+        <div
+          class="floating-icon bottom-10 left-20"
+          style="animation-delay: 3s"
+        >
+          💡
+        </div>
+
+        <div class="mb-8">
+          <h1
+            class="text-[9rem] font-black text-yellow-400 text-glow animate__animated animate__backInDown leading-none"
+          >
+            VOCAB<br /><span class="text-white">BATTLE</span>
+          </h1>
+          <div
+            class="title-underline animate__animated animate__stretchIn"
+          ></div>
+        </div>
+
+        <div class="space-y-4 mb-12">
+          <p
+            class="text-4xl font-extrabold text-blue-300 italic tracking-wide animate__animated animate__fadeInUp animate__delay-1s"
+          >
+            "Siapkan Roketmu, to the moon bersamaku!"
+          </p>
+          <p
+            class="text-xl font-bold text-slate-400 uppercase tracking-[0.5em] animate__animated animate__fadeIn animate__delay-2s"
+          >
+            by Spinotek
+          </p>
+        </div>
+
+        <div class="animate__animated animate__zoomIn animate__delay-2s">
+          <button
+            id="start-btn"
+            class="group relative bg-green-500 hover:bg-green-400 text-white text-6xl font-black py-10 px-24 rounded-full shadow-[0_15px_0_#15803d] transition-all active:translate-y-4 active:shadow-none"
+          >
+            <span
+              class="inline-block group-hover:scale-110 transition-transform"
+            >
+              MULAI! 🚩
+            </span>
+
+            <div
+              class="absolute inset-0 rounded-full bg-white/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity"
+            ></div>
+          </button>
+        </div>
+      </div>
+
+      <div
+        id="countdown"
+        class="hidden text-[15rem] font-black text-white animate__animated"
+      >
+        3
+      </div>
+
+      <div
+        id="winner-card"
+        class="hidden winner-card p-12 rounded-[3rem] text-center max-w-2xl w-full shadow-[0_20px_50px_rgba(245,158,11,0.3)]"
+      >
+        <h2
+          class="text-4xl font-bold text-blue-200 mb-2 uppercase tracking-widest"
+        >
+          Victory!
+        </h2>
+        <h1
+          id="winner-team-name"
+          class="text-7xl font-black text-yellow-400 mb-6 drop-shadow-lg"
+        >
+          TEAM 1 WINS
+        </h1>
+        <div
+          class="flex justify-around mb-10 bg-white/5 p-6 rounded-2xl border border-white/10"
+        >
+          <div>
+            <p class="text-sm text-gray-400">TIM BIRU</p>
+            <p id="final-s1" class="text-4xl font-black text-blue-400">0</p>
+          </div>
+          <div class="text-4xl">vs</div>
+          <div>
+            <p class="text-sm text-gray-400">TIM MERAH</p>
+            <p id="final-s2" class="text-4xl font-black text-red-400">0</p>
+          </div>
+        </div>
+        <button
+          onclick="location.reload()"
+          class="bg-white text-slate-900 text-3xl font-black py-5 px-12 rounded-full hover:bg-yellow-400 transition-colors"
+        >
+          MAIN LAGI 🔄
+        </button>
+      </div>
+    </div>
+
+    <audio
+      id="sfx-correct"
+      src="https://assets.mixkit.co/active_storage/sfx/2020/2020-preview.mp3"
+    ></audio>
+    <audio
+      id="sfx-wrong"
+      src="https://assets.mixkit.co/active_storage/sfx/2959/2959-preview.mp3"
+    ></audio>
+
+    <script src="script.js"></script>
+  </body>
+</html>
