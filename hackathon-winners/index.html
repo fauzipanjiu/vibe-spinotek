@@ -11,20 +11,16 @@
       rel="stylesheet"
     />
     <style>
-      :root {
-        --primary: #8b5cf6;
-        --secondary: #06b6d4;
-      }
       body {
         font-family: "Space+Grotesk", sans-serif;
         background-color: #020617;
-        overflow: hidden; /* Prevent scroll for full immersion */
+        overflow-x: hidden;
+        color: white;
       }
       .font-cyber {
         font-family: "Orbitron", sans-serif;
       }
 
-      /* Animated Background Grid */
       .bg-grid {
         background-image:
           linear-gradient(
@@ -37,72 +33,71 @@
             rgba(139, 92, 246, 0.1) 1px,
             transparent 1px
           );
-        background-size: 50px 50px;
-        animation: grid-move 20s linear infinite;
+        background-size: 60px 60px;
+        animation: grid-move 30s linear infinite;
       }
-
       @keyframes grid-move {
         0% {
           background-position: 0 0;
         }
         100% {
-          background-position: 50px 50px;
+          background-position: 60px 60px;
         }
       }
 
-      /* System Ready Animation */
-      .ready-status {
-        position: relative;
-        display: inline-block;
+      .project-scanning {
+        background: linear-gradient(90deg, #fff, #a855f7, #06b6d4, #fff);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shine 1.5s linear infinite;
+        filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.4));
       }
-      .ready-status::after {
-        content: "";
-        position: absolute;
-        bottom: -2px;
-        left: 0;
-        width: 100%;
-        height: 1px;
-        background: currentColor;
-        animation: blink 1s step-end infinite;
-      }
-
-      @keyframes blink {
-        50% {
-          opacity: 0;
+      @keyframes shine {
+        to {
+          background-position: 200% center;
         }
       }
 
-      /* Dramatic Winner Pulse */
+      .project-winner-text {
+        background: linear-gradient(to bottom, #fbbf24, #f59e0b);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.8));
+      }
+
       .winner-active {
-        animation:
-          winner-glow 1.5s infinite alternate,
-          shake 0.5s ease-in-out;
+        animation: winner-glow 1.5s infinite alternate;
         border-color: #fbbf24 !important;
-        background: rgba(15, 23, 42, 0.8) !important;
-        z-index: 50;
+        background: rgba(15, 23, 42, 0.9) !important;
+        transform: translateY(-5px);
       }
-
       @keyframes winner-glow {
         from {
-          box-shadow: 0 0 20px rgba(251, 191, 36, 0.2);
+          box-shadow: 0 0 20px rgba(251, 191, 36, 0.1);
         }
         to {
-          box-shadow:
-            0 0 50px rgba(251, 191, 36, 0.5),
-            inset 0 0 20px rgba(251, 191, 36, 0.2);
+          box-shadow: 0 0 60px rgba(251, 191, 36, 0.3);
         }
       }
 
       @keyframes shake {
-        0%,
-        100% {
-          transform: translateX(0);
+        10%,
+        90% {
+          transform: translate3d(-1px, 0, 0);
         }
-        25% {
-          transform: translateX(-5px) rotate(-1deg);
+        20%,
+        80% {
+          transform: translate3d(2px, 0, 0);
         }
-        75% {
-          transform: translateX(5px) rotate(1deg);
+        30%,
+        50%,
+        70% {
+          transform: translate3d(-4px, 0, 0);
+        }
+        40%,
+        60% {
+          transform: translate3d(4px, 0, 0);
         }
       }
 
@@ -113,48 +108,30 @@
         0% {
           transform: translate(0);
           text-shadow:
-            2px 0 red,
-            -2px 0 cyan;
+            1px 0 red,
+            -1px 0 cyan;
         }
         50% {
-          transform: translate(-2px, 2px);
+          transform: translate(-1px, 1px);
         }
         100% {
-          transform: translate(2px, -2px);
-          text-shadow:
-            -2px 0 red,
-            2px 0 cyan;
+          transform: translate(1px, -1px);
         }
-      }
-
-      /* Floating particles */
-      .particles {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: 0;
       }
     </style>
   </head>
-  <body
-    class="text-white min-h-screen flex flex-col items-center py-12 px-6 bg-grid"
-  >
-    <div class="particles" id="particles-js"></div>
-
-    <header class="text-center mb-16 relative z-10">
+  <body class="min-h-screen flex flex-col items-center py-12 px-6 bg-grid">
+    <header class="text-center mb-12 relative z-10">
       <div
-        class="absolute -top-10 left-1/2 -translate-x-1/2 w-64 h-64 bg-purple-600/30 blur-[120px] rounded-full animate-pulse"
+        class="absolute -top-10 left-1/2 -translate-x-1/2 w-64 h-64 bg-purple-600/10 blur-[100px] rounded-full"
       ></div>
       <h2
-        class="text-purple-400 font-cyber tracking-[0.5em] text-sm mb-4 animate-bounce"
+        class="text-purple-400 font-cyber tracking-[0.5em] text-[10px] md:text-xs mb-3"
       >
         SPINOTEK DIGITAL CHALLENGE
       </h2>
       <h1
-        class="text-4xl md:text-7xl font-cyber font-black mb-2 tracking-tighter italic"
+        class="text-4xl md:text-6xl font-cyber font-black mb-2 tracking-tighter italic uppercase"
       >
         PENGUMUMAN
         <span
@@ -162,15 +139,17 @@
           >PEMENANG</span
         >
       </h1>
-      <p class="text-gray-500 font-cyber tracking-widest uppercase">
+      <p
+        class="text-gray-500 font-cyber tracking-[0.3em] uppercase text-[10px]"
+      >
         Vibecoding Hackathon Vol 01
       </p>
     </header>
 
-    <main class="grid lg:grid-cols-2 gap-10 w-full max-w-7xl relative z-10">
+    <main class="grid lg:grid-cols-2 gap-8 w-full max-w-7xl relative z-10">
       <div
         id="card-1"
-        class="glass-card bg-slate-900/60 backdrop-blur-md border-2 border-slate-800 rounded-3xl p-10 flex flex-col items-center text-center transition-all duration-700 relative overflow-hidden"
+        class="glass-card bg-slate-900/40 backdrop-blur-sm border-2 border-slate-800 rounded-[2rem] p-6 md:p-10 flex flex-col items-center text-center transition-all duration-700 relative overflow-hidden"
       >
         <div
           class="absolute top-4 left-6 text-[10px] font-cyber text-slate-500"
@@ -178,47 +157,58 @@
           CHALLENGE_ID: 01
         </div>
         <h3
-          class="text-cyan-400 font-cyber text-lg mb-8 border-b border-cyan-400/20 pb-2 w-full uppercase"
+          class="text-cyan-400 font-cyber text-xs mb-6 border-b border-cyan-400/20 pb-2 w-full uppercase tracking-widest"
         >
           Website LandingPage Bisnis
         </h3>
 
         <div
-          class="flex flex-col items-center justify-center min-h-[250px] w-full"
+          class="w-full max-w-[350px] aspect-[350/263] bg-black/60 rounded-2xl mb-8 overflow-hidden relative border border-slate-700 shadow-2xl flex items-center justify-center"
         >
           <div
-            id="status-1"
-            class="ready-status text-xs font-cyber text-slate-500 mb-4 tracking-[0.3em]"
+            id="nominee-display-1"
+            class="w-full h-full flex flex-col items-center justify-center transition-all duration-500"
           >
-            ARE YOU READY?
-          </div>
-          <h2
-            id="project-1"
-            class="text-4xl md:text-4xl font-cyber font-black text-slate-100 drop-shadow-[0_0_15px_rgba(139,92,246,0.8)] transition-all uppercase tracking-tighter"
-          >
-            ??????
-          </h2>
-
-          <div
-            id="details-1"
-            class="opacity-0 scale-90 transition-all duration-500 mt-6"
-          >
-            <p id="desc-1" class="text-purple-400 italic text-lg mb-1">
-              Project Description
-            </p>
-            <p
-              id="name-1"
-              class="text-slate-400 font-cyber tracking-widest uppercase text-sm"
+            <div
+              class="w-10 h-10 border-2 border-t-purple-500 border-slate-800 rounded-full animate-spin mb-3"
+            ></div>
+            <span class="text-[9px] font-cyber text-slate-600 tracking-[0.3em]"
+              >WAITING...</span
             >
-              Participant Name
-            </p>
           </div>
+        </div>
+
+        <div
+          id="status-1"
+          class="text-[10px] font-cyber text-slate-500 mb-2 tracking-[0.3em] uppercase"
+        >
+          Are you ready?
+        </div>
+        <h2
+          id="project-1"
+          class="text-3xl md:text-5xl font-cyber font-black text-white/10 transition-all uppercase mb-8 tracking-tighter"
+        >
+          ??????
+        </h2>
+
+        <div
+          id="details-1"
+          class="opacity-0 transition-all duration-1000 mb-6 scale-90"
+        >
+          <p
+            id="desc-1"
+            class="text-purple-400 italic text-lg md:text-xl mb-1"
+          ></p>
+          <p
+            id="name-1"
+            class="text-slate-400 font-cyber tracking-[0.2em] uppercase text-xs"
+          ></p>
         </div>
 
         <button
           onclick="startRaffle(1)"
           id="btn-1"
-          class="mt-8 w-full py-5 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl font-cyber font-bold hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] transition-all active:scale-95"
+          class="w-full py-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl font-cyber font-bold hover:brightness-125 transition-all active:scale-95 shadow-lg shadow-purple-900/30"
         >
           MULAI
         </button>
@@ -226,7 +216,7 @@
 
       <div
         id="card-2"
-        class="glass-card bg-slate-900/60 backdrop-blur-md border-2 border-slate-800 rounded-3xl p-10 flex flex-col items-center text-center transition-all duration-700 relative overflow-hidden"
+        class="glass-card bg-slate-900/40 backdrop-blur-sm border-2 border-slate-800 rounded-[2rem] p-6 md:p-10 flex flex-col items-center text-center transition-all duration-700 relative overflow-hidden"
       >
         <div
           class="absolute top-4 left-6 text-[10px] font-cyber text-slate-500"
@@ -234,47 +224,58 @@
           CHALLENGE_ID: 02
         </div>
         <h3
-          class="text-cyan-400 font-cyber text-lg mb-8 border-b border-cyan-400/20 pb-2 w-full uppercase"
+          class="text-cyan-400 font-cyber text-xs mb-6 border-b border-cyan-400/20 pb-2 w-full uppercase tracking-widest"
         >
           Useful Tools / Interactive Website
         </h3>
 
         <div
-          class="flex flex-col items-center justify-center min-h-[250px] w-full"
+          class="w-full max-w-[350px] aspect-[350/263] bg-black/60 rounded-2xl mb-8 overflow-hidden relative border border-slate-700 shadow-2xl flex items-center justify-center"
         >
           <div
-            id="status-2"
-            class="ready-status text-xs font-cyber text-slate-500 mb-4 tracking-[0.3em]"
+            id="nominee-display-2"
+            class="w-full h-full flex flex-col items-center justify-center transition-all duration-500"
           >
-            ARE YOU READY?
-          </div>
-          <h2
-            id="project-2"
-            class="text-4xl md:text-4xl font-cyber font-black text-slate-100 drop-shadow-[0_0_15px_rgba(139,92,246,0.8)] transition-all uppercase tracking-tighter"
-          >
-            ??????
-          </h2>
-
-          <div
-            id="details-2"
-            class="opacity-0 scale-90 transition-all duration-500 mt-6"
-          >
-            <p id="desc-2" class="text-purple-400 italic text-lg mb-1">
-              Project Description
-            </p>
-            <p
-              id="name-2"
-              class="text-slate-400 font-cyber tracking-widest uppercase text-sm"
+            <div
+              class="w-10 h-10 border-2 border-t-purple-500 border-slate-800 rounded-full animate-spin mb-3"
+            ></div>
+            <span class="text-[9px] font-cyber text-slate-600 tracking-[0.3em]"
+              >WAITING...</span
             >
-              Participant Name
-            </p>
           </div>
+        </div>
+
+        <div
+          id="status-2"
+          class="text-[10px] font-cyber text-slate-500 mb-2 tracking-[0.3em] uppercase"
+        >
+          Are you ready?
+        </div>
+        <h2
+          id="project-2"
+          class="text-3xl md:text-5xl font-cyber font-black text-white/10 transition-all uppercase mb-8 tracking-tighter"
+        >
+          ??????
+        </h2>
+
+        <div
+          id="details-2"
+          class="opacity-0 transition-all duration-1000 mb-6 scale-90"
+        >
+          <p
+            id="desc-2"
+            class="text-purple-400 italic text-lg md:text-xl mb-1"
+          ></p>
+          <p
+            id="name-2"
+            class="text-slate-400 font-cyber tracking-[0.2em] uppercase text-xs"
+          ></p>
         </div>
 
         <button
           onclick="startRaffle(2)"
           id="btn-2"
-          class="mt-8 w-full py-5 bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl font-cyber font-bold hover:shadow-[0_0_30px_rgba(139,92,246,0.5)] transition-all active:scale-95"
+          class="w-full py-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl font-cyber font-bold hover:brightness-125 transition-all active:scale-95 shadow-lg shadow-purple-900/30"
         >
           MULAI
         </button>
@@ -282,9 +283,9 @@
     </main>
 
     <footer
-      class="mt-20 text-slate-600 font-cyber text-[10px] tracking-widest uppercase z-10"
+      class="mt-20 text-slate-600 font-cyber text-[9px] tracking-[0.4em] uppercase z-10"
     >
-      Digital Excellence // 2026 Spinotek Team
+      Spinotek Team // Vibecoding 6
     </footer>
 
     <script>
@@ -293,36 +294,50 @@
           name: "Ardi Rizqiansyah",
           title: "KALA Wastra",
           desc: "Weaving the Past, Wearing the Future",
+          thumb:
+            "https://spinotek.com/storage/42/01KFJ0AKV8P48ZFJKCVAEJ84KT.png",
         },
         {
           name: "Faiq Haidar",
           title: "Heritage Luxury",
           desc: "The Jewel of Night Cuisine",
+          thumb:
+            "https://spinotek.com/storage/39/01KFHV8NY2N16H5SNTVW0BJ61Y.png",
         },
         {
           name: "Faiz Abdurrahman",
           title: "Web3 Showcase",
           desc: "Future of Decentralized Finance",
+          thumb:
+            "https://spinotek.com/storage/58/01KFJGE9CJ2W0367MAKDC02K5J.png",
         },
         {
           name: "Fauzi Panji",
           title: "Aksa Coffee",
           desc: "Modern Coffeeshop Website",
+          thumb:
+            "https://spinotek.com/storage/42/01KFJ0AKV8P48ZFJKCVAEJ84KT.png",
         },
         {
           name: "Jaya Saputra",
           title: "Go Bus",
           desc: "Cara Terbaik Menikmati Perjalanan",
+          thumb:
+            "https://spinotek.com/storage/66/01KFK1HYEYBVS83WTKN6TE93CD.png",
         },
         {
           name: "Muhammad Nazar",
           title: "KicksMedic",
           desc: "Cuci & Restorasi Sepatu Premium",
+          thumb:
+            "https://spinotek.com/storage/48/01KFJA2MR9SDJJCKKBKRD239JQ.png",
         },
         {
           name: "Junaidi Abdul Rahman",
           title: "Jelajah Nusa",
           desc: "Modern Tour & Travel Website",
+          thumb:
+            "https://spinotek.com/storage/61/01KFJJ3P9S5S7CB91WFK35K4ER.png",
         },
       ];
 
@@ -331,46 +346,56 @@
           name: "Ardi Rizqiansyah",
           title: "Tebak Digital",
           desc: "One Word, Endless Solutions",
+          thumb:
+            "https://spinotek.com/storage/63/01KFK16E96ZNWS7ZTARV50QX86.png",
         },
         {
           name: "Faiq Haidar",
           title: "Ayo Lari",
           desc: "Personal Trainer AI dalam Saku",
+          thumb:
+            "https://spinotek.com/storage/38/01KFHTJKP1WEEEQHFZ12JPT9HP.png",
         },
         {
           name: "Faiz Abdurrahman",
           title: "Town Builder",
           desc: "Interactive Block Puzzle Game",
+          thumb:
+            "https://spinotek.com/storage/57/01KFJGAQ0Y9H8GCZ313WCJ0CCZ.png",
         },
-        { name: "Fauzi Panji", title: "AksaHub", desc: "Community Engine" },
+        {
+          name: "Fauzi Panji",
+          title: "AksaHub",
+          desc: "Community Engine",
+          thumb:
+            "https://spinotek.com/storage/42/01KFJ0AKV8P48ZFJKCVAEJ84KT.png",
+        },
         {
           name: "Jaya Saputra",
           title: "Ez TopUp",
           desc: "Lengkap, Murah, Terpercaya",
+          thumb:
+            "https://spinotek.com/storage/68/01KFK3TAJCAKD68Z7WT15V5R9R.png",
         },
         {
           name: "Muhammad Nazar",
           title: "SpeechScribe",
           desc: "Transkripsi Audio Real-Time",
+          thumb:
+            "https://spinotek.com/storage/47/01KFJ896AWMQTWTZ9ZS0NFC0TW.png",
         },
         {
           name: "Junaidi Abdul Rahman",
           title: "Vocab Battle",
           desc: "Interactive Educational Games",
+          thumb:
+            "https://spinotek.com/storage/60/01KFJHTSMWS84K6NG58S8SV6Z5.png",
         },
       ];
 
       const winners = {
-        1: {
-          name: "Muhammad Nazar Abdillah",
-          title: "KicksMedic",
-          desc: "Cuci & Restorasi Sepatu Premium",
-        },
-        2: {
-          name: "Ardi Rizqiansyah",
-          title: "Tebak Digital",
-          desc: "One Word, Endless Solutions",
-        },
+        1: challenge1[6], // Junaidi - Jelajah Nusa
+        2: challenge2[6], // Junaidi - Vocab Battle
       };
 
       const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -381,7 +406,7 @@
         osc.connect(gain);
         gain.connect(audioCtx.destination);
         osc.frequency.value = freq;
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
         gain.gain.exponentialRampToValueAtTime(
           0.01,
           audioCtx.currentTime + dur,
@@ -390,27 +415,33 @@
         osc.stop(audioCtx.currentTime + dur);
       }
 
-      function startRaffle(id) {
+      async function startRaffle(id) {
         const btn = document.getElementById(`btn-${id}`);
         const projectEl = document.getElementById(`project-${id}`);
-        const nameEl = document.getElementById(`name-${id}`);
-        const descEl = document.getElementById(`desc-${id}`);
         const statusEl = document.getElementById(`status-${id}`);
-        const detailsEl = document.getElementById(`details-${id}`);
-        const card = document.getElementById(`card-${id}`);
-
+        const nomineeDisplay = document.getElementById(`nominee-display-${id}`);
         const list = id === 1 ? challenge1 : challenge2;
         const winner = winners[id];
 
-        // Reset & UI Feedback
         btn.style.display = "none";
-        statusEl.classList.add("text-yellow-400", "glitch");
-        projectEl.classList.add("glitch", "text-slate-500");
-        card.classList.add("border-purple-500/50");
 
-        let tickCount = 0;
+        // FASE 1: NOMINASI
+        statusEl.innerText = "NOMINASI...";
+        for (let item of list) {
+          nomineeDisplay.style.opacity = "0";
+          await new Promise(r => setTimeout(r, 200));
+          nomineeDisplay.innerHTML = `
+                <img src="${item.thumb}" class="w-full h-full object-cover">
+                <div class="absolute bottom-0 w-full bg-black/80 py-2 text-[10px] font-cyber text-cyan-400 border-t border-cyan-500/30">${item.title}</div>
+            `;
+          nomineeDisplay.style.opacity = "1";
+          playBeep(300, 0.1);
+          await new Promise(r => setTimeout(r, 700));
+        }
 
-        // Alur Drama: Cepat -> Melambat (Ragu) -> Gaspol Lagi -> Final
+        // FASE 2: DRAMA ACAK
+        projectEl.classList.add("project-scanning", "glitch");
+
         const sequence = [
           { speed: 50, ticks: 40, status: "TARIK NAFAS GES..." },
           { speed: 50, ticks: 40, status: "KELUARKAN LEWAT MULUT..." },
@@ -427,17 +458,15 @@
         let currentPhase = 0;
         let phaseTicks = 0;
 
-        function processTick() {
+        function tick() {
           const phase = sequence[currentPhase];
           const rand = list[Math.floor(Math.random() * list.length)];
 
           projectEl.innerText = rand.title;
           statusEl.innerText = phase.status;
+          nomineeDisplay.innerHTML = `<img src="${rand.thumb}" class="w-full h-full object-cover opacity-40 blur-[4px]">`;
 
-          // Pitch suara makin naik biar makin tegang
-          const pitch = 150 + currentPhase * 60 + phaseTicks * 2;
-          playBeep(pitch, 0.05, currentPhase >= 5 ? "sawtooth" : "square");
-
+          playBeep(200 + currentPhase * 40, 0.05);
           phaseTicks++;
 
           if (phaseTicks >= phase.ticks) {
@@ -446,77 +475,65 @@
           }
 
           if (currentPhase < sequence.length) {
-            setTimeout(processTick, phase.speed);
+            setTimeout(tick, phase.speed);
           } else {
-            revealWinner();
+            revealWinner(id, winner);
           }
         }
+        tick();
+      }
 
-        processTick();
+      function revealWinner(id, winner) {
+        const projectEl = document.getElementById(`project-${id}`);
+        const statusEl = document.getElementById(`status-${id}`);
+        const detailsEl = document.getElementById(`details-${id}`);
+        const nameEl = document.getElementById(`name-${id}`);
+        const descEl = document.getElementById(`desc-${id}`);
+        const card = document.getElementById(`card-${id}`);
+        const nomineeDisplay = document.getElementById(`nominee-display-${id}`);
 
-        function revealWinner() {
-          projectEl.innerText = winner.title;
-          nameEl.innerText = winner.name;
-          descEl.innerText = winner.desc;
+        projectEl.innerText = winner.title;
+        nameEl.innerText = winner.name;
+        descEl.innerText = winner.desc;
+        nomineeDisplay.innerHTML = `<img src="${winner.thumb}" class="w-full h-full object-cover border-4 border-yellow-400">`;
 
-          // Visual Winner Effects
-          projectEl.classList.remove("glitch", "text-slate-500");
-          projectEl.classList.add(
-            "text-yellow-400",
-            "scale-125",
-            "drop-shadow-[0_0_30px_rgba(251,191,36,1)]",
-          );
+        projectEl.classList.remove("project-scanning", "glitch");
+        projectEl.classList.add("project-winner-text", "scale-110");
+        statusEl.innerText = "🎊 SELAMAT KEPADA 🎊";
+        statusEl.classList.add(
+          "text-green-400",
+          "font-bold",
+          "tracking-[0.2em]",
+        );
 
-          statusEl.innerText = "🎊 SELAMAT KEPADA 🎊";
-          statusEl.classList.remove("text-yellow-400", "glitch");
-          statusEl.classList.add(
-            "text-green-400",
-            "font-black",
-            "tracking-wider",
-            "text-lg",
-          );
+        detailsEl.classList.remove("opacity-0");
+        detailsEl.classList.add("scale-100");
+        card.classList.add("winner-active");
+        document.body.style.animation = "shake 0.5s both";
 
-          detailsEl.classList.remove("opacity-0", "scale-90");
-          detailsEl.classList.add("opacity-100", "scale-100", "duration-1000");
-          card.classList.add("winner-active");
+        // Celebration Sound & Confetti
+        playBeep(400, 0.2, "sine");
+        setTimeout(() => playBeep(600, 0.2, "sine"), 100);
+        setTimeout(() => playBeep(900, 0.8, "sine"), 200);
 
-          // Efek Layar Getar
-          document.body.style.animation =
-            "shake 0.5s cubic-bezier(.36,.07,.19,.97) both";
-
-          // Suara Menang
-          playBeep(300, 0.2, "sine");
-          setTimeout(() => playBeep(500, 0.2, "sine"), 100);
-          setTimeout(() => playBeep(900, 0.8, "sine"), 200);
-
-          // Sorak Sorai Konfeti
-          const duration = 6 * 1000;
-          const animationEnd = Date.now() + duration;
-
-          const interval = setInterval(function () {
-            const timeLeft = animationEnd - Date.now();
-            if (timeLeft <= 0) return clearInterval(interval);
-
-            const particleCount = 40 * (timeLeft / duration);
-
-            // Sisi Kiri
-            confetti({
-              particleCount,
-              angle: 60,
-              spread: 70,
-              origin: { x: 0, y: 0.6 },
-              colors: ["#8b5cf6", "#fbbf24", "#06b6d4"],
-            });
-            // Sisi Kanan
-            confetti({
-              particleCount,
-              angle: 120,
-              spread: 70,
-              origin: { x: 1, y: 0.6 },
-              colors: ["#8b5cf6", "#fbbf24", "#06b6d4"],
-            });
-          }, 300);
-        }
+        const end = Date.now() + 6000;
+        (function frame() {
+          confetti({
+            particleCount: 5,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0, y: 0.8 },
+            colors: ["#fbbf24", "#8b5cf6"],
+          });
+          confetti({
+            particleCount: 5,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1, y: 0.8 },
+            colors: ["#fbbf24", "#06b6d4"],
+          });
+          if (Date.now() < end) requestAnimationFrame(frame);
+        })();
       }
     </script>
   </body>
