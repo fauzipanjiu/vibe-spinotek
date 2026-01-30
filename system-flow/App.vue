@@ -13,9 +13,10 @@
 
     <div class="flex-1 flex overflow-hidden relative">
       <!-- Sidebar with transition -->
+      <!-- Sidebar with transition -->
       <div 
-        class="h-full transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden border-r border-slate-200/60 dark:border-white/10"
-        :style="{ width: isSidebarOpen ? '288px' : '0px', opacity: isSidebarOpen ? 1 : 0 }"
+        class="absolute md:relative z-20 h-full transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden border-r border-slate-200/60 dark:border-white/10 bg-white dark:bg-[#050505] shadow-2xl md:shadow-none"
+        :class="{'w-72 opacity-100': isSidebarOpen, 'w-0 opacity-0': !isSidebarOpen}"
       >
         <Sidebar class="w-72" />
       </div>
@@ -71,7 +72,7 @@ import ConfirmationModal from './components/ConfirmationModal.vue';
 
 const { state, load, save, addBlock, removeBlock, addConnection, removeConnection, exportData, importData } = useFlowStore();
 const isModalOpen = ref(false);
-const isSidebarOpen = ref(true);
+const isSidebarOpen = ref(window.innerWidth > 768); // Auto-close on mobile
 const isResetModalOpen = ref(false);
 const toasts = reactive([]);
 
