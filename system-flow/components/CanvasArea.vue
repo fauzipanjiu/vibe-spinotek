@@ -1,5 +1,6 @@
 <template>
   <div 
+    id="canvas-area"
     class="flex-1 relative bg-slate-50 dark:bg-[#050505] overflow-hidden select-none transition-colors duration-300 overscroll-behavior-none"
     style="overscroll-behavior: none;"
     @dragover.prevent
@@ -89,12 +90,12 @@
             
             <!-- Delete Icon at Midpoint (Only visible on hover) -->
             <foreignObject
-              v-if="getLineCoords(conn)"
+              v-if="getLineCoords(conn) && !isExporting"
               :x="getMidPoint(conn).x - 16" 
               :y="getMidPoint(conn).y - 16" 
               width="32" 
               height="32"
-              class="opacity-0 group-hover/line:opacity-100 transition-all duration-300 scale-75 group-hover/line:scale-100 pointer-events-auto"
+              class="no-screenshot opacity-0 group-hover/line:opacity-100 transition-all duration-300 scale-75 group-hover/line:scale-100 pointer-events-auto"
             >
               <div 
                  xmlns="http://www.w3.org/1999/xhtml" 
@@ -126,7 +127,7 @@
     </div>
 
     <!-- Fancy Zoom Controls -->
-    <div class="absolute bottom-10 left-10 z-50 flex flex-col gap-3 p-2 bg-white/40 dark:bg-black/40 backdrop-blur-2xl border border-slate-200/60 dark:border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.2)]">
+    <div v-if="!isExporting" class="no-screenshot absolute bottom-10 left-10 z-50 flex flex-col gap-3 p-2 bg-white/40 dark:bg-black/40 backdrop-blur-2xl border border-slate-200/60 dark:border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.2)]">
        <button @click="zoomIn" class="w-10 h-10 flex items-center justify-center hover:bg-blue-500/10 dark:hover:bg-blue-500/20 rounded-xl text-slate-600 dark:text-white/60 hover:text-blue-500 transition-all active:scale-90" title="Zoom In">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
        </button>
@@ -146,7 +147,7 @@
 import { ref, reactive, computed } from 'vue';
 import Block from './Block.vue';
 
-const props = defineProps(['blocks', 'connections', 'selectedBlockId']);
+const props = defineProps(['blocks', 'connections', 'selectedBlockId', 'isExporting']);
 const emit = defineEmits(['update-block', 'add-connection', 'delete-block', 'update-selected-id', 'add-block-dropped', 'delete-connection']);
 
 const selectedBlockId = computed({

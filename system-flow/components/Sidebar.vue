@@ -1,5 +1,5 @@
 <template>
-  <aside class="w-72 border-r border-slate-200/60 dark:border-white/10 bg-white/40 dark:bg-black/40 backdrop-blur-xl flex flex-col z-40 transition-all duration-500 relative">
+  <aside class="w-72 h-full border-r border-slate-200/60 dark:border-white/10 bg-white/40 dark:bg-black/40 backdrop-blur-xl flex flex-col z-40 transition-all duration-500 relative">
     <!-- Decorative side accent -->
     <div class="absolute top-0 right-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-blue-500/20 to-transparent"></div>
 
@@ -31,10 +31,38 @@
       </div>
     </div>
 
-    <div class="mt-auto p-6 border-t border-slate-100 dark:border-white/5">
-      <div class="p-4 rounded-xl bg-blue-50 dark:bg-blue-600/5 border border-blue-200 dark:border-blue-500/10">
-        <p class="text-[9px] text-blue-600 dark:text-blue-300 italic leading-relaxed">Tip: Drag items onto the canvas to start building.</p>
-      </div>
+    <div class="mt-auto p-6 border-t border-slate-100 dark:border-white/5 relative overflow-hidden">
+      <!-- High-Tech Scan Line Animation -->
+      <div class="absolute top-0 left-0 right-0 h-[1px] bg-blue-500/20 animate-scan pointer-events-none"></div>
+
+      <a href="https://spinotek.com" target="_blank" class="block group/cta relative">
+        <div class="absolute -inset-2 bg-blue-500/10 rounded-[2.5rem] blur-2xl opacity-0 group-hover/cta:opacity-100 transition-opacity duration-700"></div>
+        
+        <div class="relative p-5 rounded-3xl bg-white dark:bg-[#080808] border border-slate-200 dark:border-white/5 shadow-2xl transition-all duration-500 group-hover/cta:border-blue-500/40 group-hover/cta:-translate-y-2 overflow-hidden">
+          <!-- Glass Overlay for depth -->
+          <div class="absolute inset-0 bg-gradient-to-br from-blue-500/[0.03] to-transparent pointer-events-none"></div>
+          
+          <div class="flex items-center gap-3 mb-4">
+            <div class="relative w-10 h-10 bg-slate-100 dark:bg-white/5 rounded-2xl flex items-center justify-center border border-slate-200 dark:border-white/10 group-hover/cta:scale-110 transition-transform duration-500 shadow-inner">
+               <img src="/assets/images/favicon.png" alt="Spinotek" class="w-6 h-6 object-contain" />
+               <div class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-blue-500 rounded-full border-2 border-white dark:border-black animate-pulse"></div>
+            </div>
+            <div class="flex flex-col">
+               <span class="text-[10px] font-black text-slate-900 dark:text-white uppercase tracking-widest">Spinotek</span>
+               <span class="text-[7px] font-black text-blue-500 uppercase tracking-widest leading-none">Systems Architect</span>
+            </div>
+          </div>
+
+          <p class="text-[11px] text-slate-600 dark:text-white/50 leading-relaxed font-semibold mb-4">
+            Build Your <span class="relative inline-block mx-0.5"><span class="absolute bottom-0.5 left-0 right-0 h-[35%] bg-blue-500/20 dark:bg-blue-500/40 -skew-x-12 rounded-sm border-r-2 border-blue-500/50"></span><span class="relative text-slate-900 dark:text-white font-black italic">Digital Empire</span></span>. Let us transform your complex ideas into high-performance systems.
+          </p>
+
+          <div class="flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-xl transition-all group-hover/cta:shadow-[0_0_20px_rgba(37,99,235,0.3)]">
+            <span class="text-[9px] font-black uppercase tracking-widest flex-1">Launch Project</span>
+            <ExternalLinkIcon class="w-3 h-3" />
+          </div>
+        </div>
+      </a>
     </div>
   </aside>
 </template>
@@ -126,5 +154,13 @@ const onDragStart = (e, type) => {
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(59, 130, 246, 0.2);
+}
+@keyframes scan {
+  0% { transform: translateY(-100px); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateY(300px); opacity: 0; }
+}
+.animate-scan {
+  animation: scan 4s linear infinite;
 }
 </style>

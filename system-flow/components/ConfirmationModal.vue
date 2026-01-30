@@ -1,21 +1,21 @@
 <template>
   <Teleport to="body">
     <Transition
-      enter-active-class="transition duration-300 ease-out"
-      enter-from-class="opacity-0"
-      enter-to-class="opacity-100"
-      leave-active-class="transition duration-200 ease-in"
-      leave-from-class="opacity-100"
-      leave-to-class="opacity-0"
+      enter-active-class="transition-all duration-500 ease-out"
+      enter-from-class="opacity-0 backdrop-blur-0"
+      enter-to-class="opacity-100 backdrop-blur-sm"
+      leave-active-class="transition-all duration-300 ease-in"
+      leave-from-class="opacity-100 backdrop-blur-sm"
+      leave-to-class="opacity-0 backdrop-blur-0"
     >
-      <div v-if="isOpen" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+      <div v-if="isOpen" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 transition-all">
         <Transition
-          enter-active-class="transition duration-300 ease-out"
-          enter-from-class="opacity-0 scale-95 translate-y-4"
-          enter-to-class="opacity-100 scale-100 translate-y-0"
-          leave-active-class="transition duration-200 ease-in"
-          leave-from-class="opacity-100 scale-100 translate-y-0"
-          leave-to-class="opacity-0 scale-95 translate-y-4"
+          enter-active-class="transition-all duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+          enter-from-class="opacity-0 scale-50 rotate-6 translate-y-12"
+          enter-to-class="opacity-100 scale-100 rotate-0 translate-y-0"
+          leave-active-class="transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
+          leave-from-class="opacity-100 scale-100 rotate-0 translate-y-0"
+          leave-to-class="opacity-0 scale-75 -rotate-6 translate-y-8"
         >
           <div class="relative w-full max-w-md bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 rounded-3xl shadow-2xl overflow-hidden">
             <!-- Background Decorative Glow -->

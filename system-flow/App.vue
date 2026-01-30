@@ -8,12 +8,13 @@
       @toggle-sidebar="isSidebarOpen = !isSidebarOpen"
       @reset-request="isResetModalOpen = true"
       @apply-template="applyTemplate"
+      @notify="showToast($event.message, $event.type)"
     />
 
     <div class="flex-1 flex overflow-hidden relative">
       <!-- Sidebar with transition -->
       <div 
-        class="transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden border-r border-slate-200/60 dark:border-white/10"
+        class="h-full transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] overflow-hidden border-r border-slate-200/60 dark:border-white/10"
         :style="{ width: isSidebarOpen ? '288px' : '0px', opacity: isSidebarOpen ? 1 : 0 }"
       >
         <Sidebar class="w-72" />
@@ -24,6 +25,7 @@
         :blocks="state.blocks"
         :connections="state.connections"
         :selected-block-id="state.selectedBlockId"
+        :is-exporting="state.isExporting"
         @update-block="handleUpdateBlock"
         @add-connection="handleConnect"
         @delete-connection="removeConnection"
@@ -123,6 +125,33 @@ const applyTemplate = (templateName) => {
         { id: 'sl2', from: 's1', fromPort: 'right', to: 's3', toPort: 'top' },
         { id: 'sl3', from: 's1', fromPort: 'bottom', to: 's4', toPort: 'top' },
       ]
+    },
+    erp: {
+      blocks: [
+        { id: 'erp1', type: 'login', title: 'Admin Gateway', x: 0, y: 300, width: 220, height: 160 },
+        { id: 'erp2', type: 'dashboard', title: 'Main Console', x: 300, y: 300, width: 220, height: 160 },
+        { id: 'erp3', type: 'search', title: 'Customer Search', x: 300, y: 50, width: 220, height: 160 },
+        { id: 'erp4', type: 'list', title: 'Product Inventory', x: 300, y: 550, width: 220, height: 160 },
+        { id: 'erp5', type: 'details', title: 'Customer Profile', x: 600, y: 50, width: 220, height: 160 },
+        { id: 'erp6', type: 'stats', title: 'Inventory Analytics', x: 600, y: 550, width: 220, height: 160 },
+        { id: 'erp7', type: 'terminal', title: 'Process Logs', x: 600, y: 300, width: 220, height: 160 },
+        { id: 'erp8', type: 'payment', title: 'Payment Processing', x: 900, y: 300, width: 220, height: 160 },
+        { id: 'erp9', type: 'invoice', title: 'Digital Receipt', x: 1200, y: 200, width: 220, height: 160 },
+        { id: 'erp10', type: 'success', title: 'Transaction Sync', x: 1200, y: 400, width: 220, height: 160 },
+      ],
+      connections: [
+        { id: 'erl1', from: 'erp1', fromPort: 'right', to: 'erp2', toPort: 'left' },
+        { id: 'erl2', from: 'erp2', fromPort: 'top', to: 'erp3', toPort: 'bottom' },
+        { id: 'erl3', from: 'erp2', fromPort: 'bottom', to: 'erp4', toPort: 'top' },
+        { id: 'erl4', from: 'erp3', fromPort: 'right', to: 'erp5', toPort: 'left' },
+        { id: 'erl5', from: 'erp4', fromPort: 'right', to: 'erp6', toPort: 'left' },
+        { id: 'erl6', from: 'erp2', fromPort: 'right', to: 'erp7', toPort: 'left' },
+        { id: 'erl7', from: 'erp7', fromPort: 'right', to: 'erp8', toPort: 'left' },
+        { id: 'erl8', from: 'erp5', fromPort: 'bottom', to: 'erp8', toPort: 'top' },
+        { id: 'erl9', from: 'erp6', fromPort: 'top', to: 'erp8', toPort: 'bottom' },
+        { id: 'erl10', from: 'erp8', fromPort: 'right', to: 'erp9', toPort: 'left' },
+        { id: 'erl11', from: 'erp9', fromPort: 'bottom', to: 'erp10', toPort: 'top' },
+      ]
     }
   };
 
@@ -174,6 +203,28 @@ const handleModalDelete = (id) => {
 
 onMounted(() => {
   load();
+  
+  // Check for shared flow in URL
+  const params = new URLSearchParams(window.location.search);
+  const flowData = params.get('flow');
+  if (flowData) {
+    try {
+      const decoded = JSON.parse(atob(flowData));
+      if (decoded.blocks && decoded.connections) {
+        state.blocks = decoded.blocks;
+        state.connections = decoded.connections;
+        save();
+        showToast("Shared flow imported successfully!", "success");
+        
+        // Clean URL without reload
+        const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+      }
+    } catch (e) {
+      console.error("Failed to parse shared flow", e);
+      showToast("Invalid share link", "error");
+    }
+  }
 });
 
 const handleAddBlockDropped = ({ type, x, y }) => {
@@ -236,5 +287,10 @@ body {
   margin: 0;
   overflow: hidden;
   overscroll-behavior: none;
+}
+
+/* Screenshot Export Utility */
+.exporting-mode .no-screenshot {
+  display: none !important;
 }
 </style>

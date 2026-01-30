@@ -41,6 +41,7 @@
       :import-data="importData" 
       @reset-request="$emit('reset-request')"
       @apply-template="$emit('apply-template', $event)"
+      @notify="$emit('notify', $event)"
     />
   </div>
 </template>
@@ -50,5 +51,5 @@ import { PanelLeftIcon } from 'lucide-vue-next';
 import HeaderActions from './HeaderActions.vue';
 
 const props = defineProps(['state', 'exportData', 'importData', 'isSidebarOpen']);
-defineEmits(['toggle-sidebar', 'reset-request', 'apply-template']);
+defineEmits(['toggle-sidebar', 'reset-request', 'apply-template', 'notify']);
 </script>

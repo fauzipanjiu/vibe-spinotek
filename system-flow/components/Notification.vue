@@ -12,7 +12,7 @@
         <div 
           v-for="toast in toasts" 
           :key="toast.id"
-          class="flex items-center gap-4 px-6 py-3 bg-white/60 dark:bg-black/60 backdrop-blur-2xl border border-slate-200/50 dark:border-white/10 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.2)] overflow-hidden min-w-[320px] relative group"
+          class="flex items-center gap-4 px-6 py-4 bg-white/95 dark:bg-black/60 backdrop-blur-2xl border border-slate-200 dark:border-white/10 rounded-2xl shadow-[0_30px_60px_-12px_rgba(0,0,0,0.15)] overflow-hidden min-w-[340px] relative group"
         >
           <!-- Progress bar decorative -->
           <div 
@@ -36,8 +36,8 @@
 
           <!-- Message -->
           <div class="flex flex-col">
-            <span class="text-[9px] font-black uppercase tracking-[0.2em] opacity-40 mb-0.5">{{ toast.type || 'Success' }}</span>
-            <span class="text-xs font-bold text-slate-900 dark:text-white/90 leading-tight">{{ toast.message }}</span>
+            <span class="text-[9px] font-black uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 opacity-60 dark:opacity-40 mb-0.5">{{ toast.type || 'Success' }}</span>
+            <span class="text-xs font-bold text-slate-800 dark:text-white/90 leading-tight">{{ toast.message }}</span>
           </div>
         </div>
       </TransitionGroup>

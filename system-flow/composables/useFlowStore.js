@@ -9,6 +9,7 @@ export function useFlowStore() {
     isDarkMode: true,
     zoom: 1,
     selectedBlockId: null,
+    isExporting: false,
   });
 
   // Load from LocalStorage
