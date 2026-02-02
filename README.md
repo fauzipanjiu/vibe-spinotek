@@ -105,6 +105,41 @@ Kita menggunakan konsep _Workspace_, jadi satu `package.json` mengedalikan semua
 
 ---
 
+106:
+107: ## 📦 Manajemen Aset & Gambar (PENTING!)
+108:
+109: Project ini menggunakan struktur aset standar untuk memastikan gambar bekerja baik di Localhost maupun Production.
+110:
+111: ### 1. Folder `public` untuk Aset
+112:
+113: **JANGAN** simpan gambar langsung di folder project kamu (misal `jelajah-nusa/assets`).
+114: Tapi, simpanlah di dalam folder `public/` dengan struktur nama project kamu.
+115:
+116: - **Struktur Folder**:
+117: `text
+118:   /public
+119:   ├── /assets/images      <-- Logo & Favicon Global
+120:   ├── /jelajah-nusa/assets <-- Aset khusus project 'jelajah-nusa'
+121:   ├── /aksa-coffee/assets  <-- Aset khusus project 'aksa-coffee'
+122:   └── ...
+123:   `
+124:
+125: ### 2. Cara Panggil Gambar di HTML/Code
+126:
+127: Karena saat build folder `public` disalin ke root, panggil aset **tanpa** awalan `/public` atau `./public`. Gunakan path sesuai struktur di atas.
+128:
+129: `html
+130: <!-- BENAR -->
+131: <img src="assets/images/logo.png" />
+132: <img src="jelajah-nusa/assets/bromo.jpg" />
+133: 
+134: <!-- SALAH (Akan 404 di Production) -->
+135: <img src="./assets/bromo.jpg" />
+136: <img src="/public/assets/logo.png" />
+137: `
+138:
+139: ---
+
 ## 🤝 Kolaborasi Tim & Git
 
 - **.env Aman**: File `.env` sudah masuk `.gitignore`. Kredensial server kamu aman di laptop masing-masing.
