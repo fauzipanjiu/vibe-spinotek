@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Service Catalog | Spinotek - Tech Solution</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         :root {
             --bg-deep: #020617; /* Navy super gelap */
@@ -212,6 +213,10 @@
             font-weight: 700;
             transition: 0.3s;
             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         .btn-wa:hover { 
@@ -279,13 +284,20 @@
 
         .social-link {
             background: rgba(255,255,255,0.05);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-dim);
+            text-decoration: none;
+        }
+
+        .social-link i {
+            font-size: 1.2rem;
         }
 
         .social-link:hover {
@@ -315,7 +327,7 @@
 
     <header class="site-header container">
         <a href="/">
-            <img src="../assets/images/spinotek-logo.png" alt="Spinotek Logo" class="logo-img">
+            <img src="../public/assets/images/spinotek-logo.png" alt="Spinotek Logo" class="logo-img">
         </a>
     </header>
 
@@ -346,7 +358,9 @@
                     <li>Integrasi Pixel & Analytics</li>
                     <li>Copywriting Strategy</li>
                 </ul>
-                <a href="https://wa.me/6282164599911?text=Halo%20Spinotek,%20saya%20tertarik%20dengan%20paket%20High-Conversion%20LP." class="btn-wa">Mulai Sekarang</a>
+                <a href="https://wa.me/6282164599911?text=Halo%20Spinotek,%20saya%20tertarik%20dengan%20paket%20High-Conversion%20LP." class="btn-wa">
+                    <i class="fab fa-whatsapp"></i> Mulai Sekarang
+                </a>
             </article>
 
             <article class="sp-card">
@@ -363,7 +377,9 @@
                     <li>Business Email Setup</li>
                     <li>SEO Foundation</li>
                 </ul>
-                <a href="https://wa.me/6282164599911?text=Halo%20Spinotek,%20saya%20tertarik%20dengan%20paket%20Company%20Profile." class="btn-wa">Mulai Sekarang</a>
+                <a href="https://wa.me/6282164599911?text=Halo%20Spinotek,%20saya%20tertarik%20dengan%20paket%20Company%20Profile." class="btn-wa">
+                    <i class="fab fa-whatsapp"></i> Mulai Sekarang
+                </a>
             </article>
 
             <article class="sp-card">
@@ -379,7 +395,9 @@
                     <li>Inventory Dashboard</li>
                     <li>Customer Account Portal</li>
                 </ul>
-                <a href="https://wa.me/6282164599911?text=Halo%20Spinotek,%20saya%20tertarik%20dengan%20paket%20E-Commerce." class="btn-wa">Mulai Sekarang</a>
+                <a href="https://wa.me/6282164599911?text=Halo%20Spinotek,%20saya%20tertarik%20dengan%20paket%20E-Commerce." class="btn-wa">
+                    <i class="fab fa-whatsapp"></i> Mulai Sekarang
+                </a>
             </article>
 
             <article class="sp-card">
@@ -395,7 +413,9 @@
                     <li>Quiz & Grading Feature</li>
                     <li>Membership Management</li>
                 </ul>
-                <a href="https://wa.me/6282164599911?text=Halo%20Spinotek,%20saya%20tertarik%20dengan%20paket%20LMS." class="btn-wa">Mulai Sekarang</a>
+                <a href="https://wa.me/6282164599911?text=Halo%20Spinotek,%20saya%20tertarik%20dengan%20paket%20LMS." class="btn-wa">
+                    <i class="fab fa-whatsapp"></i> Mulai Sekarang
+                </a>
             </article>
 
             <article class="sp-card">
@@ -411,7 +431,9 @@
                     <li>API & Third-party Sync</li>
                     <li>Dedicated Support</li>
                 </ul>
-                <a href="https://wa.me/6282164599911?text=Halo%20Spinotek,%20saya%20ingin%20konsultasi%20Custom%20App%20(ERP)." class="btn-wa">Konsultasi Project</a>
+                <a href="https://wa.me/6282164599911?text=Halo%20Spinotek,%20saya%20ingin%20konsultasi%20Custom%20App%20(ERP)." class="btn-wa">
+                    <i class="fab fa-whatsapp"></i> Konsultasi Project
+                </a>
             </article>
 
             <article class="sp-card">
@@ -427,7 +449,9 @@
                     <li>Uptime Tracking 24/7</li>
                     <li>Priority Bug Fixes</li>
                 </ul>
-                <a href="https://wa.me/6282164599911?text=Halo%20Spinotek,%20saya%20tertarik%20dengan%20High-Conversion%20LP." class="btn-wa">Mulai Sekarang</a>
+                <a href="https://wa.me/6282164599911?text=Halo%20Spinotek,%20saya%20tertarik%20dengan%20High-Conversion%20LP." class="btn-wa">
+                    <i class="fab fa-whatsapp"></i> Mulai Sekarang
+                </a>
             </article>
 
         </div>
@@ -435,7 +459,9 @@
         <div class="closing">
             <h2>Punya Ide Brilian?</h2>
             <p>Jika katalog di atas belum menjawab kebutuhan spesifik Anda, sampaikan visi Anda dan kami akan merancang solusi teknologi yang presisi.</p>
-            <a href="https://wa.me/6282164599911?text=Halo%20Spinotek,%20saya%20ingin%20konsultasi%20solusi%20kustom%20untuk%20bisnis." class="btn-wa" style="display:inline-block; padding: 18px 50px; background: var(--accent); color: var(--bg-deep); border-radius: 50px;">Diskusikan Sekarang</a>
+            <a href="https://wa.me/6282164599911?text=Halo%20Spinotek,%20saya%20ingin%20konsultasi%20solusi%20kustom%20untuk%20bisnis." class="btn-wa" style="display:inline-flex; align-items: center; gap: 12px; padding: 18px 50px; background: var(--accent); color: var(--bg-deep); border-radius: 50px;">
+                <i class="fab fa-whatsapp" style="font-size: 1.4rem;"></i> Diskusikan Sekarang
+            </a>
         </div>
     </main>
 
@@ -455,11 +481,18 @@
                 </div>
                 <div class="footer-col">
                     <h4>Connect With Us</h4>
-                    <a href="mailto:info@spinotek.com">info@spinotek.com</a>
-                    <a href="https://wa.me/6282164599911">+62 821-6459-9911</a>
+                    <a href="mailto:info@spinotek.com"><i class="far fa-envelope" style="margin-right: 10px; color: var(--accent);"></i>info@spinotek.com</a>
+                    <a href="https://wa.me/6282164599911" style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fab fa-whatsapp" style="font-size: 1.2rem; color: #25D366;"></i>
+                        +62 821-6459-9911
+                    </a>
                     <div class="social-links">
-                        <a href="https://www.instagram.com/spinotekcorp/" target="_blank" class="social-link" title="Instagram">IG</a>
-                        <a href="https://spinotek.com" target="_blank" class="social-link" title="Website">WEB</a>
+                        <a href="https://www.instagram.com/spinotekcorp/" target="_blank" class="social-link" title="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://spinotek.com" target="_blank" class="social-link" title="Website">
+                            <i class="fas fa-globe"></i>
+                        </a>
                     </div>
                 </div>
             </div>
