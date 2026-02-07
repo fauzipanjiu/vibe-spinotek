@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-blue': '#0033CC',
+                        'brand-black': '#080C10',
+                        'brand-white': '#FFFFFF',
+                        'brand-gray': '#F1F5F9',
+                        'brand-cyan': '#00F0FF',
+                        'brand-pink': '#FF00FF',
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-blue: #0033CC;
+            --brand-black: #080C10;
+            --brand-white: #FFFFFF;
+            --brand-gray: #F1F5F9;
+            --brand-cyan: #00F0FF;
+            --brand-pink: #FF00FF;
+        }
+        * { cursor: default; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--brand-white); 
+            color: var(--brand-black); 
+            line-height: 1.4;
+            overflow-x: hidden;
+            background-image: 
+                linear-gradient(var(--brand-gray) 1px, transparent 1px),
+                linear-gradient(90deg, var(--brand-gray) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .serif-italic { font-family: 'Instrument Serif', serif; font-style: italic; }
+        .marquee { overflow: hidden; white-space: nowrap; background: var(--brand-blue); color: white; padding: 14px 0; }
+        .marquee-content { display: inline-block; animation: marquee 30s linear infinite; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        
+        .title-slanted { 
+            font-weight: 950; 
+            font-style: italic; 
+            text-transform: uppercase; 
+            transform: skewX(-5deg);
+            display: inline-block;
+        }
+
+        .pill-tag { 
+            display: inline-block; 
+            padding: 8px 24px; 
+            background: var(--brand-blue); 
+            color: white;
+            border-radius: 9999px; 
+            font-size: 0.75rem; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            letter-spacing: 0.2em;
+            box-shadow: 4px 4px 0px var(--brand-cyan);
+        }
+
+        /* IdeaFest Shapes */
+        .sparkle {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: var(--brand-pink);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: bounce-rotate 4s infinite ease-in-out;
+        }
+        @keyframes bounce-rotate {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+            50% { transform: scale(1.3) rotate(180deg); opacity: 1; }
+        }
+
+        .arrow-leap {
+            width: 60px;
+            height: 60px;
+            color: var(--brand-blue);
+            animation: leap 2s infinite ease-out;
+        }
+        @keyframes leap {
+            0% { transform: translate(0, 0); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translate(40px, -40px); opacity: 0; }
+        }
+
+        .card-creative {
+            background: var(--brand-white);
+            border: 4px solid var(--brand-black);
+            border-radius: 24px;
+            padding: 40px;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+        .card-creative:hover {
+            transform: translate(-8px, -8px);
+            box-shadow: 12px 12px 0px var(--brand-blue);
+        }
+
+        .btn-creative {
+            background: var(--brand-black);
+            color: white;
+            padding: 24px 48px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border: none;
+            position: relative;
+            transition: all 0.2s;
+            clip-path: polygon(0% 0%, 95% 0%, 100% 50%, 95% 100%, 0% 100%);
+        }
+        .btn-creative:hover {
+            background: var(--brand-blue);
+            color: white;
+            padding-left: 60px;
+        }
+
+        .scribble-line {
+            position: absolute;
+            z-index: -1;
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: draw 2s forwards ease-in-out;
+        }
+        @keyframes draw { to { stroke-dashoffset: 0; } }
+
+        .abstract-scribble {
+            position: absolute;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.3;
+            filter: blur(0.5px);
+        }
+
+        .watermark-text {
+            position: absolute;
+            font-size: 20vw;
+            font-weight: 1000;
+            line-height: 0.8;
+            color: var(--brand-blue);
+            opacity: 0.15;
+            z-index: -1;
+            white-space: nowrap;
+            pointer-events: none;
+            text-transform: uppercase;
+            font-style: italic;
+        }
+
+        .bg-wave {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            z-index: -1;
+            opacity: 0.05;
+        }
+
+        @keyframes scroll-vertical {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50%); }
+        }
+        .news-scroll-container {
+            display: flex;
+            flex-direction: column;
+            animation: scroll-vertical 40s linear infinite;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="flex justify-between items-center px-10 py-8 border-b border-gray-100 sticky top-0 bg-white/80 backdrop-blur-md z-50">
+        <div class="font-black text-2xl tracking-tighter title-slanted text-brand-blue">PROGRESSIVE<span class="text-brand-pink">!</span></div>
+        <div class="hidden md:flex gap-12 font-bold text-xs uppercase tracking-[0.2em]">
+            <a href="#about" class="hover:text-brand-blue transition-colors">Tentang</a>
+            <a href="#program" class="hover:text-brand-blue transition-colors">Program</a>
+            <a href="#who" class="hover:text-brand-blue transition-colors">Peserta</a>
+        </div>
+        <button class="bg-brand-blue text-white px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:opacity-90 transition-all">
+            JOIN NOW
+        </button>
+    </nav>
+
+    <section class="relative px-10 py-24 md:py-40 bg-white overflow-hidden">
+        <!-- IdeaFest Elements -->
+        <div class="sparkle top-20 right-40"></div>
+        <div class="sparkle bottom-40 left-20 bg-brand-blue" style="animation-delay: 1s"></div>
+        
+        <!-- Abstract Scribble 1 -->
+        <svg class="abstract-scribble top-10 left-1/4 w-96 h-96 text-brand-pink" viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M20,50 C50,20 150,20 180,50 C210,80 150,150 100,180 C50,210 20,150 20,100 C20,50 80,20 120,40" />
+        </svg>
+
+        <div class="absolute top-1/4 left-10 opacity-10">
+            <svg class="w-64 h-64 text-brand-blue" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="currentColor" stroke-width="2" fill="none" /></svg>
+        </div>
+
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-16 items-center">
+                <div class="md:col-span-8">
+                    <span class="pill-tag mb-10">Collective Space 2026</span>
+                    <h1 class="text-7xl md:text-[100px] font-black tracking-tighter leading-[0.8] text-brand-black title-slanted">
+                        CAPEK KERJA, <br>
+                        <span class="text-brand-blue relative inline-block">
+                            Gak Tau Kenapa?
+                            <svg class="absolute -bottom-4 left-0 w-full scribble-line" viewBox="0 0 400 20" fill="none">
+                                <path d="M5 15C100 5 300 5 395 15" stroke="currentColor" stroke-width="12" stroke-linecap="round"/>
+                            </svg>
+                        </span>
+                    </h1>
+                    <p class="mt-16 text-2xl md:text-3xl max-w-2xl text-slate-800 font-bold leading-tight">
+                        Banyak karyawan muda merasa lelah dan bingung—bukan karena lemah, tapi karena fase membangun karier memang tidak pernah mudah.
+                    </p>
+                    <div class="mt-20 flex flex-wrap gap-8 items-center">
+                        <button class="btn-creative">
+                            PELAJARI PROGRAM
+                        </button>
+                        <div class="flex items-center gap-4 group cursor-pointer">
+                            <div class="w-16 h-16 rounded-full border-4 border-brand-blue flex items-center justify-center group-hover:bg-brand-blue transition-colors">
+                                <svg class="w-8 h-8 group-hover:text-white transition-colors" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                            <span class="font-black text-xl uppercase tracking-tighter">IKUTI LIVE TALK</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="md:col-span-4 hidden md:block">
+                    <div class="relative group cursor-pointer">
+                        <div class="absolute -inset-4 bg-brand-blue/10 rounded-[48px] rotate-6 scale-95 group-hover:rotate-0 transition-transform duration-700"></div>
+                        <div class="w-full h-[500px] bg-brand-blue rounded-[40px] border-4 border-black rotate-3 shadow-2xl relative overflow-hidden group-hover:rotate-0 transition-all duration-700 p-8 flex flex-col">
+                             <div class="mb-4 flex items-center gap-2 border-b border-white/20 pb-4">
+                                 <span class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></span>
+                                 <span class="text-white font-black text-xs uppercase tracking-[0.2em]">Live Reports: INA Worklife</span>
+                             </div>
+                             
+                             <div class="flex-1 overflow-hidden relative">
+                                 <div class="news-scroll-container">
+                                     <!-- Group A -->
+                                     <div class="news-group">
+                                         <div class="mb-10">
+                                             <h4 class="text-white font-black text-lg leading-tight uppercase mb-2">INDONESIA SIAGA BURNOUT</h4>
+                                             <p class="text-white/70 text-sm font-bold">50% pekerja muda di Jakarta terindikasi mengalami kelelahan mental kronis.</p>
+                                         </div>
+                                         <div class="mb-10">
+                                             <h4 class="text-white font-black text-lg leading-tight uppercase mb-2">STIGMA MULAI PUDAR</h4>
+                                             <p class="text-white/70 text-sm font-bold">Konsultasi ke psikolog kini menjadi tren positif di kalangan korporat startup.</p>
+                                         </div>
+                                         <div class="mb-10">
+                                             <h4 class="text-white font-black text-lg leading-tight uppercase mb-2">DEREGULASI JAM KERJA</h4>
+                                             <p class="text-white/70 text-sm font-bold">Pemerintah wacanakan hak untuk 'mematikan notifikasi' setelah jam kantor.</p>
+                                         </div>
+                                         <div class="mb-10">
+                                             <h4 class="text-white font-black text-lg leading-tight uppercase mb-2">TOXIC LEADERSHIP</h4>
+                                             <p class="text-white/70 text-sm font-bold">Penyebab utama 70% karyawan mengundurkan diri menurut survei terbaru.</p>
+                                         </div>
+                                         <div class="mb-10">
+                                             <h4 class="text-white font-black text-lg leading-tight uppercase mb-2">QUIET QUITTING LOKAL</h4>
+                                             <p class="text-white/70 text-sm font-bold">Fenomena pekerja yang fokus pada tugas minimum demi menjaga kewarasan.</p>
+                                         </div>
+                                         <div class="mb-10">
+                                             <h4 class="text-white font-black text-lg leading-tight uppercase mb-2">WELLNESS DI KANTOR</h4>
+                                             <p class="text-white/70 text-sm font-bold">Ruang meditasi kini jadi fasilitas wajib di gedung-gedung perkantoran Sudirman.</p>
+                                         </div>
+                                         <div class="mb-10">
+                                             <h4 class="text-white font-black text-lg leading-tight uppercase mb-2">MENTAL HEALTH DAY</h4>
+                                             <p class="text-white/70 text-sm font-bold">Instansi mulai berikan cuti khusus untuk pemulihan kondisi emosional karyawan.</p>
+                                         </div>
+                                         <div class="mb-10">
+                                             <h4 class="text-white font-black text-lg leading-tight uppercase mb-2">GAJI vs EKSPEKTASI</h4>
+                                             <p class="text-white/70 text-sm font-bold">Tekanan ekonomi dan beban kerja overload pemicu utama stres level staf.</p>
+                                         </div>
+                                     </div>
+                                     <!-- Group B (Duplicate for seamless loop) -->
+                                     <div class="news-group">
+                                         <div class="mb-10">
+                                             <h4 class="text-white font-black text-lg leading-tight uppercase mb-2">INDONESIA SIAGA BURNOUT</h4>
+                                             <p class="text-white/70 text-sm font-bold">50% pekerja muda di Jakarta terindikasi mengalami kelelahan mental kronis.</p>
+                                         </div>
+                                         <div class="mb-10">
+                                             <h4 class="text-white font-black text-lg leading-tight uppercase mb-2">STIGMA MULAI PUDAR</h4>
+                                             <p class="text-white/70 text-sm font-bold">Konsultasi ke psikolog kini menjadi tren positif di kalangan korporat startup.</p>
+                                         </div>
+                                         <div class="mb-10">
+                                             <h4 class="text-white font-black text-lg leading-tight uppercase mb-2">DEREGULASI JAM KERJA</h4>
+                                             <p class="text-white/70 text-sm font-bold">Pemerintah wacanakan hak untuk 'mematikan notifikasi' setelah jam kantor.</p>
+                                         </div>
+                                         <div class="mb-10">
+                                             <h4 class="text-white font-black text-lg leading-tight uppercase mb-2">TOXIC LEADERSHIP</h4>
+                                             <p class="text-white/70 text-sm font-bold">Penyebab utama 70% karyawan mengundurkan diri menurut survei terbaru.</p>
+                                         </div>
+                                         <div class="mb-10">
+                                             <h4 class="text-white font-black text-lg leading-tight uppercase mb-2">QUIET QUITTING LOKAL</h4>
+                                             <p class="text-white/70 text-sm font-bold">Fenomena pekerja yang fokus pada tugas minimum demi menjaga kewarasan.</p>
+                                         </div>
+                                         <div class="mb-10">
+                                             <h4 class="text-white font-black text-lg leading-tight uppercase mb-2">WELLNESS DI KANTOR</h4>
+                                             <p class="text-white/70 text-sm font-bold">Ruang meditasi kini jadi fasilitas wajib di gedung-gedung perkantoran Sudirman.</p>
+                                         </div>
+                                         <div class="mb-10">
+                                             <h4 class="text-white font-black text-lg leading-tight uppercase mb-2">MENTAL HEALTH DAY</h4>
+                                             <p class="text-white/70 text-sm font-bold">Instansi mulai berikan cuti khusus untuk pemulihan kondisi emosional karyawan.</p>
+                                         </div>
+                                         <div class="mb-10">
+                                             <h4 class="text-white font-black text-lg leading-tight uppercase mb-2">GAJI vs EKSPEKTASI</h4>
+                                             <p class="text-white/70 text-sm font-bold">Tekanan ekonomi dan beban kerja overload pemicu utama stres level staf.</p>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+
+                             <div class="mt-4 pt-4 border-t border-white/20">
+                                 <span class="text-white font-black text-xl tracking-tighter uppercase">LEAD THE LEAP.</span>
+                             </div>
+                        </div>
+                        <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-white border-4 border-black rounded-full flex items-center justify-center shadow-xl animate-bounce">
+                             <svg class="w-20 h-20 text-brand-blue transform rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="marquee border-y border-brand-blue/10">
+        <div class="marquee-content font-bold text-sm uppercase tracking-widest">
+            Kesehatan Mental Karyawan • Progressive Talk • Bukan Sekadar Healing • Ruang Aman Pekerja Muda • Definisi Ulang Karier •
+            Kesehatan Mental Karyawan • Progressive Talk • Bukan Sekadar Healing • Ruang Aman Pekerja Muda • Definisi Ulang Karier •
+        </div>
+    </div>
+
+    <section class="px-10 py-32 bg-brand-white relative overflow-hidden" id="about">
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-24 gap-8">
+                <div class="max-w-3xl">
+                    <span class="pill-tag mb-8">Deep Context</span>
+                    <h2 class="text-6xl md:text-8xl font-black mb-10 tracking-tighter uppercase leading-[0.85] text-brand-black title-slanted">
+                        Realita yang Sering <br>Kita <span class="text-brand-blue underline decoration-8 underline-offset-8 transition-all">"Tahan Dulu".</span>
+                    </h2>
+                </div>
+                <!-- Floating Arrows -->
+                <div class="hidden md:flex gap-4">
+                    <div class="arrow-leap">
+                        <svg class="w-full h-full transform rotate-45" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
+                    </div>
+                    <div class="arrow-leap" style="animation-delay: 0.5s">
+                        <svg class="w-full h-full transform rotate-45" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-12">
+                <div class="card-creative group border-brand-gray bg-white shadow-sm border-2">
+                    <span class="text-7xl font-black text-brand-blue block mb-8 transform group-hover:rotate-12 transition-transform opacity-100">01</span>
+                    <h3 class="font-black text-3xl uppercase tracking-tighter text-brand-black mb-6">Adaptasi <br>Belum Selesai</h3>
+                    <p class="text-black font-bold text-lg leading-snug">Baru masuk kantor, tapi target sudah setinggi langit. Kita dipaksa lari sebelum bisa jalan.</p>
+                </div>
+                <div class="card-creative group border-brand-blue bg-white shadow-xl border-4">
+                    <span class="text-7xl font-black text-brand-blue block mb-8 transform group-hover:rotate-12 transition-transform opacity-100">02</span>
+                    <h3 class="font-black text-3xl uppercase tracking-tighter text-brand-black mb-6">Budaya <br>"Nanti Terbiasa"</h3>
+                    <p class="text-black font-bold text-lg leading-snug">Seringkali kelelahan kita dianggap sebagai 'makanan sehari-hari' yang tidak perlu dibahas.</p>
+                </div>
+                <div class="card-creative group border-black bg-brand-black text-white">
+                    <span class="text-7xl font-black text-white block mb-8 transform group-hover:rotate-12 transition-transform opacity-100">03</span>
+                    <h3 class="font-black text-3xl uppercase tracking-tighter text-white mb-6">Takut Tidak <br>Profesional</h3>
+                    <p class="text-white font-bold text-lg leading-snug">Ingin bilang "aku capek", tapi takut dicap kurang kompeten atau manja oleh lingkungan.</p>
+                </div>
+            </div>
+            <div class="watermark-text -bottom-10 -right-20">SPACE</div>
+        </div>
+    </section>
+
+    <section class="bg-brand-black text-white py-32 px-10 relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 2px 2px, var(--brand-blue) 1px, transparent 0); background-size: 20px 20px;"></div>
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="grid md:grid-cols-2 gap-24 items-center">
+                <div>
+                    <h2 class="text-6xl md:text-[100px] font-black tracking-tighter mb-10 leading-[1.1] title-slanted uppercase text-white">
+                        INI BUKAN <br> <span class="bg-brand-blue text-white px-4 py-1 inline-block mt-2">PERASAAN KAMU DOANG.</span>
+                    </h2>
+                    <p class="text-brand-cyan text-2xl mb-12 font-extrabold leading-tight">
+                        WHO mencatat 15% pekerja mengalami isu mental. Di Indonesia, lebih dari 50% pekerja muda terindikasi burnout.
+                    </p>
+                    <div class="border-l-8 border-brand-blue pl-8 py-4 italic text-3xl font-black uppercase tracking-tighter text-white">
+                        "Ini masalah sistemik, bukan cuma soal 'kurang sabar'."
+                    </div>
+                </div>
+                <div class="relative">
+                    <div class="card-creative bg-white text-brand-black transform rotate-3 scale-110 border-brand-blue relative z-10">
+                        <h4 class="font-black text-3xl mb-10 tracking-tight uppercase title-slanted">KENAPA KITA ADA?</h4>
+                        <ul class="space-y-8 font-black text-lg uppercase tracking-tighter text-black">
+                            <li class="flex items-center gap-6 line-through text-slate-400">
+                                <span class="text-3xl text-brand-pink">✕</span> Konten umum
+                            </li>
+                            <li class="flex items-center gap-6 line-through text-slate-400">
+                                <span class="text-3xl text-brand-pink">✕</span> Seminar kaku
+                            </li>
+                            <li class="flex items-center gap-6 text-brand-blue">
+                                <span class="text-3xl">✓</span> Progressive Talk
+                            </li>
+                        </ul>
+                        <!-- Decorative Arrow -->
+                        <div class="absolute -bottom-10 -right-10 w-24 h-24 bg-brand-blue rounded-full border-4 border-black flex items-center justify-center animate-pulse">
+                             <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-32 px-10 bg-brand-white relative overflow-hidden" id="program">
+        <div class="max-w-7xl mx-auto relative z-10">
+            <div class="flex justify-between items-end mb-24">
+                <div class="max-w-2xl">
+                    <span class="pill-tag mb-8">Methodology</span>
+                    <h2 class="text-6xl md:text-8xl font-black tracking-tighter uppercase leading-[0.85] text-brand-black title-slanted">PROGRAM <br>STRUCTURE.</h2>
+                </div>
+                <div class="hidden md:block">
+                    <div class="w-32 h-32 bg-brand-blue border-4 border-black animate-spin-slow rounded-3xl"></div>
+                </div>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-16">
+                <div class="card-creative bg-white border-brand-black transform hover:scale-105">
+                    <!-- Abstract Scribble 2 -->
+                    <svg class="abstract-scribble top-20 right-5 w-24 h-24 text-brand-blue opacity-30" viewBox="0 0 100 100" stroke="currentColor" stroke-width="4" fill="none">
+                        <path d="M10,50 Q30,10 50,50 T90,50" />
+                    </svg>
+                    <div class="flex justify-between items-center mb-12">
+                        <span class="pill-tag bg-brand-blue text-white shadow-none">DIGITAL SESSION</span>
+                        <span class="font-black text-3xl italic underline decoration-8 decoration-brand-blue text-brand-blue">FREE</span>
+                    </div>
+                    <h3 class="text-5xl font-black mb-8 uppercase tracking-tighter text-brand-black title-slanted">LIVE TALK.</h3>
+                    <p class="mb-12 text-black text-xl font-bold leading-tight">Diskusi terbuka lewat layar. Kita bahas realita dunia kerja bareng psikolog dengan gaya santai tapi dalam.</p>
+                    <ul class="space-y-6 font-black text-sm uppercase tracking-[0.2em] text-brand-blue">
+                        <li class="flex items-center gap-4"><span class="w-8 h-8 rounded-full bg-brand-blue shadow-lg"></span> <span class="text-black">Live Discussion</span></li>
+                        <li class="flex items-center gap-4"><span class="w-8 h-8 rounded-full bg-brand-blue shadow-lg"></span> <span class="text-black">Expert Speakers</span></li>
+                        <li class="flex items-center gap-4"><span class="w-8 h-8 rounded-full bg-brand-blue shadow-lg"></span> <span class="text-black">Real Stories</span></li>
+                    </ul>
+                </div>
+
+                <div class="card-creative bg-brand-blue text-white border-4 border-brand-black transform -rotate-2 hover:rotate-0">
+                    <div class="flex justify-between items-center mb-12">
+                        <span class="pill-tag bg-white text-brand-blue border-none shadow-none">IN-PERSON</span>
+                        <span class="font-black text-3xl italic underline decoration-8 decoration-brand-pink">LIMITED</span>
+                    </div>
+                    <h3 class="text-5xl font-black mb-8 uppercase tracking-tighter title-slanted">OFFLINE EVENT.</h3>
+                    <p class="mb-12 text-white text-xl font-bold leading-tight">Small group discussion. Duduk melingkar di ruang aman untuk refleksi mendalam dan menentukan 'next play' kariermu.</p>
+                    <ul class="space-y-6 font-black text-sm uppercase tracking-[0.2em]">
+                        <li class="flex items-center gap-4"><span class="w-8 h-8 rounded-full bg-white"></span> Intimate Circle</li>
+                        <li class="flex items-center gap-4"><span class="w-8 h-8 rounded-full bg-white"></span> Psychologist Led</li>
+                        <li class="flex items-center gap-4"><span class="w-8 h-8 rounded-full bg-white"></span> Networking</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-40 px-10 text-center bg-brand-gray/50 border-y border-gray-100 relative overflow-hidden" id="cta">
+         <div class="watermark-text -top-20 -left-10">JOIN</div>
+         <div class="sparkle top-10 left-1/4"></div>
+         <div class="sparkle bottom-10 right-1/4 bg-brand-pink"></div>
+         
+         <!-- More Abstract Objects -->
+         <div class="absolute top-1/2 left-10 w-32 h-32 border-4 border-brand-blue rounded-full opacity-10 animate-pulse"></div>
+         <div class="absolute bottom-1/4 right-20 w-48 h-48 bg-brand-pink opacity-5 rounded-full blur-3xl"></div>
+
+         <div class="max-w-5xl mx-auto relative z-10">
+            <h2 class="text-7xl md:text-9xl font-black tracking-tighter mb-16 uppercase leading-[0.8] text-brand-black title-slanted">
+                SIAP MULAI <br> <span class="text-brand-blue relative">BERHENTI?</span>
+            </h2>
+            <div class="flex flex-col md:flex-row justify-center items-center gap-12">
+                <button class="btn-creative transform scale-125">DAFTAR LIVE TALK</button>
+                <div class="w-20 h-20 border-8 border-brand-blue rounded-full animate-ping hidden md:block"></div>
+            </div>
+            <div class="mt-32">
+                <a href="javascript:void(0)" onclick="downloadPDF()" class="font-black text-xl italic border-b-8 border-brand-blue pb-2 hover:bg-brand-blue hover:text-white transition-all uppercase tracking-widest px-6 inline-block">
+                    GET PROGRAM DETAIL (PDF)
+                </a>
+            </div>
+         </div>
+    </section>
+
+    <footer class="p-20 bg-brand-black text-white flex flex-col md:flex-row justify-between items-center gap-12">
+        <div class="font-black text-4xl tracking-tighter title-slanted text-brand-blue">PROGRESSIVE<span class="text-brand-pink">!</span></div>
+        <div class="flex gap-16 font-black text-sm uppercase tracking-[0.3em] overflow-hidden">
+            <a href="#" class="hover:text-brand-blue transition-colors transform hover:skew-x-12">Instagram</a>
+            <a href="#" class="hover:text-brand-blue transition-colors transform hover:skew-x-12">LinkedIn</a>
+            <a href="#" class="hover:text-brand-blue transition-colors transform hover:skew-x-12">YouTube</a>
+        </div>
+        <div class="text-xs font-black text-white uppercase tracking-[0.5em]">
+            © 2026 PROGRESSIVE TALK. LEAD THE LEAP. <br>
+            <span class="opacity-50 text-[10px]">Created by PROGRESSIVE.</span>
+        </div>
+    </footer>
+
+    <script>
+        function downloadPDF() {
+            const element = document.body;
+            
+            // Elements to hide from PDF
+            const nav = document.querySelector('nav');
+            const footer = document.querySelector('footer');
+            const ctaContainer = document.querySelector('#cta');
+            const downloadLinkParent = document.querySelector('.mt-32');
+            
+            // Add a class to handle potential styling conflicts during export
+            document.body.classList.add('exporting-pdf');
+
+            const opt = {
+                margin:       [0, 0],
+                filename:     'Progressive-Talk-Program-Detail.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { 
+                    scale: 2, 
+                    useCORS: true,
+                    letterRendering: true,
+                    scrollX: 0,
+                    scrollY: 0
+                },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+            };
+
+            // Custom transformation to hide elements
+            const worker = html2pdf().set(opt).from(element).toPdf().get('pdf').then((pdf) => {
+                // This doesn't actually hide them in the source, we need to do it before .from()
+            });
+
+            // Better approach: hide, save, show
+            const originalNavDisplay = nav.style.display;
+            const originalFooterDisplay = footer.style.display;
+            const originalLinkDisplay = downloadLinkParent.style.display;
+
+            nav.style.display = 'none';
+            footer.style.display = 'none';
+            downloadLinkParent.style.display = 'none';
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                nav.style.display = originalNavDisplay;
+                footer.style.display = originalFooterDisplay;
+                downloadLinkParent.style.display = originalLinkDisplay;
+                document.body.classList.remove('exporting-pdf');
+            });
+        }
+    </script>
+</body>
+</html>

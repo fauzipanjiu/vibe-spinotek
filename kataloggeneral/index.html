@@ -1,32 +1,56 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Service Catalog | Spinotek - Tech Solution</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         :root {
-            --bg-deep: #020617; /* Navy super gelap */
+            /* Light Theme Variables (Default) */
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-footer: #ffffff;
+            --primary: #0166F3;
+            --accent: #0ea5e9;
+            --text-main: #0f172a;
+            --text-dim: #64748b;
+            --border: rgba(1, 102, 243, 0.1);
+            --glow: rgba(1, 102, 243, 0.05);
+            --header-blur: rgba(255, 255, 255, 0.8);
+            --grid-color: rgba(1, 102, 243, 0.03);
+            --card-shadow: 0 10px 30px -10px rgba(1, 102, 243, 0.08);
+            --nav-text: #475569;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme Variables */
+            --bg-body: #020617;
             --bg-card: rgba(15, 23, 42, 0.6);
-            --primary: #3b82f6; /* Blue */
-            --accent: #22d3ee; /* Cyan */
-            --text-white: #f8fafc;
+            --bg-footer: rgba(1, 4, 18, 0.9);
+            --primary: #3b82f6;
+            --accent: #22d3ee;
+            --text-main: #f8fafc;
             --text-dim: #94a3b8;
             --border: rgba(59, 130, 246, 0.2);
-            --glow: rgba(59, 130, 246, 0.4);
+            --glow: rgba(59, 130, 246, 0.2);
+            --header-blur: rgba(2, 6, 23, 0.8);
+            --grid-color: rgba(59, 130, 246, 0.05);
+            --card-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.5);
+            --nav-text: #94a3b8;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-deep);
-            color: var(--text-white);
+            background-color: var(--bg-body);
+            color: var(--text-main);
             overflow-x: hidden;
             min-height: 100vh;
             line-height: 1.6;
+            transition: background-color 0.4s ease, color 0.4s ease;
         }
 
         /* --- Animated Tech Background --- */
@@ -34,8 +58,12 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
-            background: radial-gradient(circle at 50% 50%, #0f172a 0%, #020617 100%);
             overflow: hidden;
+            transition: background 0.4s ease;
+        }
+
+        [data-theme="dark"] .tech-bg {
+            background: radial-gradient(circle at 50% 50%, #0f172a 0%, #020617 100%);
         }
 
         .tech-bg::before {
@@ -44,8 +72,8 @@
             width: 200%; height: 200%;
             top: -50%; left: -50%;
             background-image: 
-                linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
             background-size: 50px 50px;
             transform: perspective(500px) rotateX(60deg);
             animation: move-grid 20s linear infinite;
@@ -60,264 +88,341 @@
 
         /* --- Header / Logo --- */
         .site-header {
-            padding: 40px 0 20px;
-            text-align: center;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--header-blur);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 40px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .logo-img {
-            height: 45px;
+            height: 36px;
             width: auto;
             transition: transform 0.3s ease;
         }
 
-        .logo-img:hover {
+        [data-theme="dark"] .logo-img {
+            filter: brightness(0) invert(1);
+        }
+
+        /* --- Theme Switcher --- */
+        .theme-toggle {
+            background: var(--border);
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            cursor: pointer;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
             transform: scale(1.05);
+            background: var(--primary);
+            color: white;
         }
 
         /* --- Navigation --- */
         .site-nav {
-            margin-bottom: 40px;
+            margin-bottom: 60px;
             display: flex;
             justify-content: center;
-            gap: 30px;
+            gap: 40px;
         }
 
         .nav-link {
-            color: var(--text-dim);
+            color: var(--nav-text);
             text-decoration: none;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 700;
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             border-bottom: 2px solid transparent;
-            padding-bottom: 5px;
+            padding-bottom: 8px;
         }
 
         .nav-link:hover {
-            color: var(--accent);
-            border-color: var(--accent);
+            color: var(--primary);
+            border-color: var(--primary);
         }
 
         /* --- Hero --- */
         .hero {
-            padding: 20px 0 60px;
+            padding: 40px 0 80px;
             text-align: center;
         }
 
         .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
             font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 24px;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        [data-theme="dark"] .hero h1 {
             background: linear-gradient(to right, #fff, #3b82f6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
         }
 
         .hero p {
             color: var(--text-dim);
-            max-width: 600px;
+            max-width: 650px;
             margin: 0 auto;
+            font-size: 1.1rem;
+            font-weight: 500;
         }
 
         /* --- Catalog Grid --- */
         .catalog-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 30px;
-            padding-bottom: 100px;
+            gap: 32px;
+            padding-bottom: 120px;
         }
 
         /* --- Service Card --- */
         .sp-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 40px;
+            border-radius: 32px;
+            padding: 48px;
             backdrop-filter: blur(12px);
             position: relative;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: flex;
             flex-direction: column;
+            box-shadow: var(--card-shadow);
         }
 
         .sp-card:hover {
             border-color: var(--primary);
-            box-shadow: 0 0 40px var(--glow);
-            transform: translateY(-10px);
+            transform: translateY(-12px);
+            box-shadow: 0 40px 80px -20px var(--glow);
         }
 
         .tag-promo {
             position: absolute;
-            top: 20px; right: 20px;
-            font-size: 0.65rem;
+            top: 24px; right: 24px;
+            font-size: 0.7rem;
             background: var(--primary);
             color: white;
-            padding: 5px 15px;
+            padding: 6px 16px;
             border-radius: 50px;
             font-weight: 800;
             letter-spacing: 1px;
+            box-shadow: 0 4px 12px var(--glow);
         }
 
         .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
+            font-size: 3rem;
+            margin-bottom: 24px;
             display: block;
         }
 
         .sp-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 12px;
-            color: var(--accent);
-            font-weight: 700;
+            font-size: 1.75rem;
+            margin-bottom: 16px;
+            color: var(--text-main);
+            font-weight: 800;
         }
 
         .price-box {
-            margin: 15px 0 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            margin: 16px 0 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
         }
 
-        .price-box .from { font-size: 0.75rem; color: var(--text-dim); display: block; text-transform: uppercase; letter-spacing: 1px; }
-        .price-box .val { font-size: 2rem; font-weight: 800; color: #fff; }
+        .price-box .from { 
+            font-size: 0.8rem; 
+            color: var(--text-dim); 
+            display: block; 
+            text-transform: uppercase; 
+            letter-spacing: 1.5px; 
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .price-box .val { 
+            font-size: 2.25rem; 
+            font-weight: 900; 
+            color: var(--text-main); 
+            letter-spacing: -0.02em;
+        }
 
         .feature-list {
             list-style: none;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             flex-grow: 1;
         }
 
         .feature-list li {
-            margin-bottom: 15px;
+            margin-bottom: 16px;
             font-size: 0.95rem;
             color: var(--text-dim);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
+            font-weight: 500;
         }
 
         .feature-list li::before {
             content: "✓";
-            color: var(--accent);
-            font-weight: bold;
+            color: var(--primary);
+            font-weight: 900;
+            font-size: 1.1rem;
         }
 
         .btn-wa {
-            display: block;
+            display: flex;
             text-align: center;
-            padding: 16px;
-            border-radius: 12px;
+            padding: 18px;
+            border-radius: 16px;
             background: var(--primary);
             color: white;
             text-decoration: none;
-            font-weight: 700;
+            font-weight: 800;
             transition: 0.3s;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-            display: flex;
+            box-shadow: 0 10px 25px -5px var(--glow);
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
+            font-size:1rem;
         }
 
         .btn-wa:hover { 
-            background: #2563eb; 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+            background: var(--text-main);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -10px var(--glow);
         }
 
         /* --- Closing CTA --- */
         .closing {
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(59, 130, 246, 0.1) 100%);
-            border-radius: 32px;
-            padding: 80px 40px;
+            background: var(--bg-card);
+            border-radius: 48px;
+            padding: 100px 40px;
             text-align: center;
             border: 1px solid var(--border);
-            margin-bottom: 100px;
+            margin-bottom: 120px;
             position: relative;
             overflow: hidden;
+            box-shadow: var(--card-shadow);
         }
 
-        .closing h2 { font-size: 2.5rem; margin-bottom: 20px; font-weight: 800; }
-        .closing p { color: var(--text-dim); margin-bottom: 40px; font-size: 1.1rem; }
+        .closing h2 { 
+            font-size: 3rem; 
+            margin-bottom: 24px; 
+            font-weight: 800;
+            color: var(--text-main);
+        }
+        .closing p { 
+            color: var(--text-dim); 
+            margin-bottom: 48px; 
+            font-size: 1.25rem; 
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 500;
+        }
 
         /* --- Footer Info --- */
         .site-footer {
-            background: rgba(1, 4, 18, 0.8);
+            background: var(--bg-footer);
             border-top: 1px solid var(--border);
-            padding: 80px 0 40px;
-            margin-top: 50px;
+            padding: 100px 0 40px;
+            transition: background-color 0.4s ease;
         }
 
         .footer-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 60px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 60px;
+            margin-bottom: 80px;
         }
 
         .footer-col h4 {
-            color: #fff;
-            margin-bottom: 25px;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            color: var(--text-main);
+            margin-bottom: 30px;
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: -0.01em;
         }
 
         .footer-col p, .footer-col a {
             color: var(--text-dim);
             text-decoration: none;
-            font-size: 0.95rem;
+            font-size: 1rem;
             display: block;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             transition: color 0.3s ease;
+            font-weight: 500;
         }
 
         .footer-col a:hover {
-            color: var(--accent);
+            color: var(--primary);
         }
 
         .social-links {
             display: flex;
-            gap: 15px;
-            margin-top: 15px;
+            gap: 16px;
+            margin-top: 24px;
         }
 
         .social-link {
-            background: rgba(255,255,255,0.05);
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
+            background: var(--border);
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
             display: flex;
             justify-content: center;
             align-items: center;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: var(--text-dim);
+            color: var(--text-main);
             text-decoration: none;
         }
 
         .social-link i {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
         }
 
         .social-link:hover {
             background: var(--primary);
             color: #fff;
-            transform: translateY(-3px);
+            transform: translateY(-5px);
         }
 
         .copyright {
             text-align: center;
-            color: rgba(148, 163, 184, 0.4);
-            font-size: 0.8rem;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            padding-top: 30px;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            padding-top: 40px;
+            opacity: 0.6;
+            font-weight: 500;
         }
 
         @media (max-width: 768px) {
             .catalog-grid { grid-template-columns: 1fr; }
-            .site-nav { flex-direction: column; align-items: center; gap: 15px; }
-            .closing { padding: 40px 20px; }
+            .site-nav { gap: 20px; flex-wrap: wrap; }
+            .closing { padding: 60px 24px; border-radius: 32px; }
+            .hero h1 { font-size: 3rem; }
+            .site-header { padding: 15px 0; }
         }
     </style>
 </head>
@@ -325,20 +430,25 @@
 
     <div class="tech-bg"></div>
 
-    <header class="site-header container">
-        <a href="/">
-            <img src="../public/assets/images/spinotek-logo.png" alt="Spinotek Logo" class="logo-img">
-        </a>
+    <header class="site-header">
+        <div class="container header-content">
+            <a href="/">
+                <img src="../public/assets/images/spinotek-logo.png" alt="Spinotek Logo" class="logo-img">
+            </a>
+            <button class="theme-toggle" id="theme-toggle" title="Toggle Theme">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
     </header>
 
     <nav class="site-nav container">
         <a href="#services" class="nav-link">Main Services</a>
-        <a href="https://wa.me/6282164599911?text=Halo%20Spinotek,%20saya%20ingin%20diskusi%20proyek%20custom." class="nav-link" style="color: var(--accent);">Custom Request</a>
+        <a href="https://wa.me/6282164599911?text=Halo%20Spinotek,%20saya%20ingin%20diskusi%20proyek%20custom." class="nav-link">Custom Request</a>
         <a href="https://spinotek.com" target="_blank" class="nav-link">About Us</a>
     </nav>
 
     <section class="hero container" id="services">
-        <h1>Tech Solutions for Growth</h1>
+        <h1>Tech Solutions <br>for Growth</h1>
         <p>Akselerasi bisnis Anda dengan infrastruktur digital modern. Kami membangun solusi yang skalabel, aman, dan berorientasi pada konversi.</p>
     </section>
 
@@ -459,9 +569,11 @@
         <div class="closing">
             <h2>Punya Ide Brilian?</h2>
             <p>Jika katalog di atas belum menjawab kebutuhan spesifik Anda, sampaikan visi Anda dan kami akan merancang solusi teknologi yang presisi.</p>
-            <a href="https://wa.me/6282164599911?text=Halo%20Spinotek,%20saya%20ingin%20konsultasi%20solusi%20kustom%20untuk%20bisnis." class="btn-wa" style="display:inline-flex; align-items: center; gap: 12px; padding: 18px 50px; background: var(--accent); color: var(--bg-deep); border-radius: 50px;">
-                <i class="fab fa-whatsapp" style="font-size: 1.4rem;"></i> Diskusikan Sekarang
-            </a>
+            <div style="display: flex; justify-content: center;">
+                <a href="https://wa.me/6282164599911?text=Halo%20Spinotek,%20saya%20ingin%20konsultasi%20solusi%20kustom%20untuk%20bisnis." class="btn-wa" style="padding: 20px 60px; border-radius: 50px; font-size: 1.1rem; box-shadow: 0 20px 40px -10px var(--glow);">
+                    <i class="fab fa-whatsapp" style="font-size: 1.5rem;"></i> Diskusikan Sekarang
+                </a>
+            </div>
         </div>
     </main>
 
@@ -471,7 +583,7 @@
                 <div class="footer-col">
                     <h4>Spinotek Corp</h4>
                     <p>PT Spektrum Inovasi Teknologi</p>
-                    <p style="font-size: 0.85rem; opacity: 0.8;">Partner strategis pengembangan infrastruktur digital dan solusi teknologi inovatif di Indonesia.</p>
+                    <p style="font-size: 0.9rem; opacity: 0.8;">Partner strategis pengembangan infrastruktur digital dan solusi teknologi inovatif di Indonesia.</p>
                 </div>
                 <div class="footer-col">
                     <h4>Office Address</h4>
@@ -481,9 +593,9 @@
                 </div>
                 <div class="footer-col">
                     <h4>Connect With Us</h4>
-                    <a href="mailto:info@spinotek.com"><i class="far fa-envelope" style="margin-right: 10px; color: var(--accent);"></i>info@spinotek.com</a>
-                    <a href="https://wa.me/6282164599911" style="display: flex; align-items: center; gap: 10px;">
-                        <i class="fab fa-whatsapp" style="font-size: 1.2rem; color: #25D366;"></i>
+                    <a href="mailto:info@spinotek.com"><i class="far fa-envelope" style="margin-right: 12px; color: var(--primary);"></i>info@spinotek.com</a>
+                    <a href="https://wa.me/6282164599911" style="display: flex; align-items: center; gap: 12px;">
+                        <i class="fab fa-whatsapp" style="font-size: 1.25rem; color: #25D366;"></i>
                         +62 821-6459-9911
                     </a>
                     <div class="social-links">
@@ -501,6 +613,36 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = themeToggle.querySelector('i');
+        const html = document.documentElement;
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        updateIcon(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateIcon(newTheme);
+        });
+
+        function updateIcon(theme) {
+            if (theme === 'dark') {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        }
+    </script>
 
 </body>
 </html>
